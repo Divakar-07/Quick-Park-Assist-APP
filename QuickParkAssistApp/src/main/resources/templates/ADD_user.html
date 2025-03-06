@@ -63,6 +63,18 @@
                     <input type="email" th:field="*{email}" class="form-control" required placeholder="e.g: divakar.sharma@example.com">
                     <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                 </div>
+                <!-- Email -->
+                <div class="form-group">
+                    <label>username</label>
+                    <input type="text" th:field="*{username}" class="form-control" required placeholder="e.g: divakar@123">
+                    <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                </div>
+                <!-- Email -->
+                <div class="form-group">
+                    <label>password</label>
+                    <input type="password" th:field="*{password}" class="form-control" required placeholder="e.g: divakar.sharma@example.com">
+                    <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
 
                 <!-- Contact Number -->
                 <div class="form-group">

@@ -1,10 +1,17 @@
 package com.qpa.entity;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -25,6 +32,12 @@ public class UserInfo {
     private String email;
 	@Column(nullable = false, length = 13)
     private String contactNumber;
+
+	@Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password; // Encrypted before saving
     
     @Enumerated(EnumType.STRING)
     private UserType userType;
@@ -35,7 +48,24 @@ public class UserInfo {
     private Status status;
 
 	public UserInfo(){
+		
 	}
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     // Getters, Setters, and Enums
 

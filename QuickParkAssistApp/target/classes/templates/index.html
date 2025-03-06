@@ -1,121 +1,194 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quick Park Assist</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="/favicon_io/site.webmanifest">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon_io/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon_io/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon_io/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/favicon_io/site.webmanifest" />
     <script th:src="@{/js/script.js}" defer></script>
-</head>
-<body>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
     <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo"><img th:src="@{\images\parked-car-svgrepo-com.svg}" alt="Quick Park" width="50"></a>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/users/new">Add User</a></li>
-                <li><a href="/vehicles/new">Add Vehicle</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </div>
+      <div class="nav-container">
+        <a href="/" class="logo"
+          ><img
+            th:src="@{\images\parked-car-svgrepo-com.svg}"
+            alt="Quick Park"
+            width="50"
+        /></a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/users/new">Add User</a></li>
+          <li><a href="/vehicles/new">Add Vehicle</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><button id="logout" class="text-white border bg-blue-500 px-3 py-1 rounded-md">logout</button></li>
+        </ul>
+      </div>
     </nav>
 
     <!-- Alerts Section -->
     <div th:if="${success}" class="alert alert-success" role="alert">
-        <span th:text="${success}"></span>
-        <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+      <span th:text="${success}"></span>
+      <button
+        class="alert-close"
+        onclick="this.parentElement.style.display='none'"
+      >
+        &times;
+      </button>
     </div>
 
     <div th:if="${error}" class="alert alert-danger" role="alert">
-        <span th:text="${error}"></span>
-        <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+      <span th:text="${error}"></span>
+      <button
+        class="alert-close"
+        onclick="this.parentElement.style.display='none'"
+      >
+        &times;
+      </button>
     </div>
 
-<!-- Users Table -->
-<div class="container">
-    <h2>Registered Users</h2>
-    <div class="table-container">
+    <!-- Users Table -->
+    <div class="container">
+      <h2>Registered Users</h2>
+      <div class="table-container">
         <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Type</th>
-                    <th>Registration Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.userId}"></td>
-                    <td th:text="${user.firstName + ' ' + user.lastName}"></td>
-                    <td th:text="${user.email}"></td>
-                    <td th:text="${user.contactNumber}"></td>
-                    <td th:text="${user.userType}"></td>
-                    <td th:text="${#temporals.format(user.dateOfRegister, 'dd-MMM-yyyy')}"></td>
-                    <td th:text="${user.status}"></td>
-                    <td>
-                        <div class="action-buttons">
-                            <a th:href="@{/users/edit/{id}(id=${user.userId})}" class="btn btn-primary">Edit</a>
-                            <a th:href="@{/users/delete/{id}(id=${user.userId})}" class="btn btn-danger">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th>Type</th>
+              <th>Registration Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="user : ${users}">
+              <td th:text="${user.userId}"></td>
+              <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+              <td th:text="${user.email}"></td>
+              <td th:text="${user.contactNumber}"></td>
+              <td th:text="${user.userType}"></td>
+              <td
+                th:text="${#temporals.format(user.dateOfRegister, 'dd-MMM-yyyy')}"
+              ></td>
+              <td th:text="${user.status}"></td>
+              <td>
+                <div class="action-buttons">
+                  <a
+                    th:href="@{/users/edit/{id}(id=${user.userId})}"
+                    class="btn btn-primary"
+                    >Edit</a
+                  >
+                  <a
+                    th:href="@{/users/delete/{id}(id=${user.userId})}"
+                    class="btn btn-danger"
+                    >Delete</a
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
+      </div>
     </div>
-</div>
 
-<!-- Vehicles Table -->
-<div class="container">
-    <h2>Registered Vehicles</h2>
-    <div class="table-container">
+    <!-- Vehicles Table -->
+    <div class="container">
+      <h2>Registered Vehicles</h2>
+      <div class="table-container">
         <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Reg Number</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Type</th>
-                    <th>Reg Date</th>
-                    <th>Active</th>
-                    <th>Owner</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="vehicle : ${vehicles}">
-                    <td th:text="${vehicle.vehicleId}"></td>
-                    <td th:text="${vehicle.registrationNumber}"></td>
-                    <td th:text="${vehicle.brand}"></td>
-                    <td th:text="${vehicle.model}"></td>
-                    <td th:text="${vehicle.vehicleType}"></td>
-                    <td th:text="${#temporals.format(vehicle.registrationDate, 'dd-MMM-yyyy')}"></td>
-                    <td th:text="${vehicle.isActive} ? 'Yes' : 'No'"></td>
-                    <td th:text="${vehicle.userObj.firstName + ' ' + vehicle.userObj.lastName}"></td>
-                    <td>
-                        <div class="action-buttons">
-                            <a th:href="@{/vehicles/edit/{id}(id=${vehicle.vehicleId})}" class="btn btn-primary">Edit</a>
-                            <a th:href="@{/vehicles/delete/{id}(id=${vehicle.vehicleId})}" class="btn btn-danger">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Reg Number</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Type</th>
+              <th>Reg Date</th>
+              <th>Active</th>
+              <th>Owner</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="vehicle : ${vehicles}">
+              <td th:text="${vehicle.vehicleId}"></td>
+              <td th:text="${vehicle.registrationNumber}"></td>
+              <td th:text="${vehicle.brand}"></td>
+              <td th:text="${vehicle.model}"></td>
+              <td th:text="${vehicle.vehicleType}"></td>
+              <td
+                th:text="${#temporals.format(vehicle.registrationDate, 'dd-MMM-yyyy')}"
+              ></td>
+              <td th:text="${vehicle.isActive} ? 'Yes' : 'No'"></td>
+              <td
+                th:text="${vehicle.userObj.firstName + ' ' + vehicle.userObj.lastName}"
+              ></td>
+              <td>
+                <div class="action-buttons">
+                  <a
+                    th:href="@{/vehicles/edit/{id}(id=${vehicle.vehicleId})}"
+                    class="btn btn-primary"
+                    >Edit</a
+                  >
+                  <a
+                    th:href="@{/vehicles/delete/{id}(id=${vehicle.vehicleId})}"
+                    class="btn btn-danger"
+                    >Delete</a
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
+      </div>
     </div>
-</div>
 
     <main class="content">
-        <h1>Welcome to Quick Park Assist</h1>
-        <p>© 2025 Quick Park Assist. All rights reserved.</p>
+      <h1>Welcome to Quick Park Assist</h1>
+      <p>© 2025 Quick Park Assist. All rights reserved.</p>
     </main>
-</body>
+
+    <script>
+      const logoutBtn = document.getElementById("logout");
+      logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        fetch("/auth/logout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        }).then((response) => {
+          if (response.ok) {
+            window.location.href = "/users/login";
+          } else {
+            alert("Unauthorized request");
+            window.location.href = "/users/login";
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
