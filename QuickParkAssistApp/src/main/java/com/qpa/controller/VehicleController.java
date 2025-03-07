@@ -65,6 +65,12 @@ public class VehicleController {
         }
         return vehicles;
     }
+
+    @GetMapping("/registration/{registrationNumber}")
+    @ResponseBody
+    public Vehicle viewVehicleByRegistrationNumber(@PathVariable String registrationNumber) {
+        return vehicleService.getVehicleByRegistrationNumber(registrationNumber);
+    }
 	/*
 	addVehicle
 	viewVehicleById

@@ -48,4 +48,9 @@ public class VehicleService {
         Vehicle vehicle = getVehicleById(id);  // Ensures existence before deletion
         vehicleRepository.delete(vehicle);
     }
+
+    public Vehicle getVehicleByRegistrationNumber(String registrationNumber) {
+        return vehicleRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new InvalidEntityException("Vehicle not found with registration number: " + registrationNumber));
+    }
 }
