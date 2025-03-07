@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UserService {
-   private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -67,12 +67,20 @@ public class UserService {
     }
 
     public boolean isAuthenticated(HttpServletRequest request) {
-        String token = jwtUtil.extractTokenFromCookie(request);
-        if (token == null) {
+        
+        try{
+            String token = jwtUtil.extractTokenFromCookie(request);
+            if (token == null) {
+                return false;
+            }
+            String username = jwtUtil.extractUsername(token);
+            return jwtUtil.validateToken(token, username);
+        }
+
+        catch(Exception e){
+            System.out.println(e.getMessage());
             return false;
         }
-        String username = jwtUtil.extractUsername(token);
-        return jwtUtil.validateToken(token, username);
     }
 
     public String logoutUser(HttpServletResponse response){

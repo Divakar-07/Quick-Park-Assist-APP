@@ -24,12 +24,17 @@ public class HomeController {
 
     @GetMapping("/")
     public String homePage(HttpServletRequest request, Model model) {
-        if (!userService.isAuthenticated(request)) {
+        try {
+            if (!userService.isAuthenticated(request)) {
+                return "redirect:/loginPage";
+            }
+            model.addAttribute("users", userService.getAllUsers());
+            model.addAttribute("vehicles", vehicleService.getAllVehicles());
+            return "index";
+        } catch (Exception e) {
             return "redirect:/loginPage";
+            // TODO: handle exception
         }
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("vehicles", vehicleService.getAllVehicles());
-        return "index";
     }
 
     @GetMapping("/contact")
@@ -47,10 +52,15 @@ public class HomeController {
 
     @GetMapping("/loginPage")
     public String loginPage(HttpServletRequest request) {
-        if (userService.isAuthenticated(request)){
-            return "index";
+        try {
+            if (userService.isAuthenticated(request)){
+                return "index";
+            }
+            return "Login";
+        } catch (Exception e) {
+            return "Login";
+            // TODO: handle exception
         }
-        return "Login";
     }
     
     @GetMapping("/registerPage")
