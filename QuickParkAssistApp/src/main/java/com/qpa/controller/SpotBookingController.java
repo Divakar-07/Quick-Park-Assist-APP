@@ -18,10 +18,9 @@ public class SpotBookingController {
     @Autowired private SpotBookingService spotBookingService;
 
     @PostMapping("/bookSpot/{spotId}/vehicle/{vehicleId}")
-    public ResponseEntity<String> bookSpot(@RequestBody SpotBookingInfo bookingInfo, @PathVariable Long spotId, @PathVariable Long vehicleId) {
+    public ResponseEntity<?> bookSpot(@RequestBody SpotBookingInfo bookingInfo, @PathVariable Long spotId, @PathVariable Long vehicleId) {
         try {
-            spotBookingService.bookSpot(bookingInfo, spotId, vehicleId);
-            return ResponseEntity.ok("spot has successfully booked");            
+            return ResponseEntity.ok(spotBookingService.bookSpot(bookingInfo, spotId, vehicleId));            
         } catch (Exception e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }

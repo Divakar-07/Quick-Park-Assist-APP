@@ -1,104 +1,158 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-gray-100">
     <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
-        <h2 class="text-2xl font-bold text-center mb-6">Register</h2>
+      <h2 class="text-2xl font-bold text-center mb-6">Register</h2>
 
-        <form th:action="@{/users/save}" th:object="${user}" method="post" class="space-y-4">
-            <input type="hidden" th:field="*{userId}">
+      <form
+        th:action="@{/users/save}"
+        th:object="${user}"
+        method="post"
+        class="space-y-4"
+      >
+        <input type="hidden" th:field="*{userId}" />
 
-            <!-- Date of Registration -->
-            <div>
-                <label class="block font-medium">Date of Registration</label>
-                <input type="date" th:field="*{dateOfRegister}" required min="1900-01-01" max="2025-12-31"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-            </div>
+        <!-- Date of Registration -->
+        <div class="hidden">
+          <label class="block font-medium">Date of Registration</label>
+          <input type="date" th:field="*{dateOfRegister}" class="hidden" />
+        </div>
 
-            <!-- First Name -->
-            <div>
-                <label class="block font-medium">First Name</label>
-                <input type="text" th:field="*{firstName}" required placeholder="e.g Divakar"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-            </div>
+        <!-- First Name -->
+        <div>
+          <label class="block font-medium">First Name</label>
+          <input
+            type="text"
+            th:field="*{firstName}"
+            required
+            placeholder="e.g Divakar"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          />
+        </div>
 
-            <!-- Last Name -->
-            <div>
-                <label class="block font-medium">Last Name</label>
-                <input type="text" th:field="*{lastName}" required placeholder="e.g Sharma"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-            </div>
+        <!-- Last Name -->
+        <div>
+          <label class="block font-medium">Last Name</label>
+          <input
+            type="text"
+            th:field="*{lastName}"
+            required
+            placeholder="e.g Sharma"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          />
+        </div>
 
-            <!-- Date of Birth -->
-            <div>
-                <label class="block font-medium">Date of Birth</label>
-                <input type="date" th:field="*{dob}" required min="1900-01-01" max="2025-12-31"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-            </div>
+        <!-- Date of Birth -->
+        <div>
+          <label class="block font-medium">Date of Birth</label>
+          <input
+            type="date"
+            th:field="*{dob}"
+            required
+            min="1900-01-01"
+            max="2025-12-31"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          />
+        </div>
 
-            <!-- Email -->
-            <div>
-                <label class="block font-medium">Email</label>
-                <input type="email" th:field="*{email}" required placeholder="e.g: divakar.sharma@example.com"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-                <div class="text-red-500 text-sm mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-            </div>
+        <!-- Email -->
+        <div>
+          <label class="block font-medium">Email</label>
+          <input
+            type="email"
+            th:field="*{email}"
+            required
+            placeholder="e.g: divakar.sharma@example.com"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          />
+          <div
+            class="text-red-500 text-sm mt-1"
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
+          ></div>
+        </div>
 
-            <!-- Contact Number -->
-            <div>
-                <label class="block font-medium">Contact Number</label>
-                <input type="tel" th:field="*{contactNumber}" required pattern="\+91[6-9][0-9]{9}" 
-                       placeholder="e.g: +919876543210"
-                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-                <div class="text-red-500 text-sm mt-1" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></div>
-            </div>
+        <!-- Contact Number -->
+        <div>
+          <label class="block font-medium">Contact Number</label>
+          <input
+            type="tel"
+            th:field="*{contactNumber}"
+            required
+            pattern="\[6-9][0-9]{9}"
+            placeholder="e.g: 1234567890"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          />
+          <div
+            class="text-red-500 text-sm mt-1"
+            th:if="${#fields.hasErrors('contactNumber')}"
+            th:errors="*{contactNumber}"
+          ></div>
+        </div>
 
-            <!-- User Type -->
-            <div>
-                <label class="block font-medium">User Type</label>
-                <select th:field="*{userType}" 
-                        class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-                    <option value="VEHICLE_OWNER">Vehicle Owner</option>
-                    <option value="SLOT_OWNER">Slot Owner</option>
-                </select>
-            </div>
+        <!-- User Type -->
+        <div>
+          <label class="block font-medium">User Type</label>
+          <select
+            th:field="*{userType}"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          >
+            <option value="VEHICLE_OWNER">Vehicle Owner</option>
+            <option value="SLOT_OWNER">Slot Owner</option>
+          </select>
+        </div>
 
-            <!-- Address -->
-            <div>
-                <label class="block font-medium">Address</label>
-                <textarea th:field="*{address}" required rows="3"
-                          class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
-                          placeholder="Street, City, State, ZIP"></textarea>
-            </div>
+        <!-- Address -->
+        <div>
+          <label class="block font-medium">Address</label>
+          <textarea
+            th:field="*{address}"
+            required
+            rows="3"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+            placeholder="Street, City, State, ZIP"
+          ></textarea>
+        </div>
 
-            <!-- Status -->
-            <div>
-                <label class="block font-medium">Status</label>
-                <select th:field="*{status}"
-                        class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                </select>
-            </div>
+        <!-- Status -->
+        <div>
+          <label class="block font-medium">Status</label>
+          <select
+            th:field="*{status}"
+            class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200"
+          >
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
 
-            <!-- Form Actions -->
-            <div class="flex justify-between">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                    <span th:text="${user.userId != null} ? 'Update' : 'Create'"></span>
-                </button>
-                <a th:href="@{/}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
-                    Cancel
-                </a>
-            </div>
-        </form>
+        <!-- Form Actions -->
+        <div class="flex justify-between">
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            <span th:text="${user.userId != null} ? 'Update' : 'Create'"></span>
+          </button>
+          <a
+            th:href="@{/}"
+            class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
 
-        <p class="mt-4 text-center">
-            Already have an account? 
-            <a th:href="@{/login}" class="text-blue-500 hover:underline">Login here</a>
-        </p>
+      <p class="mt-4 text-center">
+        Already have an account?
+        <a th:href="@{/login}" class="text-blue-500 hover:underline"
+          >Login here</a
+        >
+      </p>
     </div>
-</body>
+  </body>
 </html>

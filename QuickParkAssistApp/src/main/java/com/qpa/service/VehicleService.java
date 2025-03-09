@@ -91,7 +91,6 @@ public class VehicleService {
 
     public Vehicle findByBookingId(Long bookingId){
         Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
-        return bookingInfo.map(SpotBookingInfo::getVehicle).orElse(null);
-
+        return bookingInfo.get().getVehicle();
     }
 }

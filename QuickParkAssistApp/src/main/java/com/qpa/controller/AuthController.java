@@ -34,11 +34,15 @@ public class AuthController {
 
     @PostMapping("/save")
     public ResponseEntity<?> addAuth(@ModelAttribute AuthUser authUser, HttpServletRequest request, HttpServletResponse response) {
-        if (authService.addAuth(authUser, response)){
+        if (authService.isAuthenticated(request)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Already logged in"));
         }
-        authService.addAuth(authUser, response);        
-        return ResponseEntity.ok("user's auth has successfully registered");
+        System.out.println("user object: " + authUser.getUser());
+        authService.addAuth(authUser, response);
+        
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+        .header("Location", "/")
+        .build();
     }
     
 

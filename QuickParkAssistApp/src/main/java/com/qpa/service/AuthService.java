@@ -85,6 +85,29 @@ public class AuthService {
             return e.getMessage();
         }
     }
+
+    public Long getUserId(HttpServletRequest request){
+        return jwtUtil.extractUserId(jwtUtil.extractTokenFromCookie(request));
+    }
+
+    public AuthUser getAuth(HttpServletRequest request){
+        Optional<AuthUser> authUser = authRepository.findByUser_UserId(getUserId(request));
+
+        if (authUser == null){
+            throw new RuntimeException("unauthorized request");
+        }
+        return authUser.get();
+    }
     
-    
+    public void deleteAuth(Long userId, HttpServletResponse response){
+        try {
+            System.out.println("inside the deleteAuth");
+            Optional<AuthUser> authUser = authRepository.findByUser_UserId(userId);
+            logoutUser(response);
+            authRepository.delete(authUser.get());
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

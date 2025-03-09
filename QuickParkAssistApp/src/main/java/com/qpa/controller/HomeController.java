@@ -11,6 +11,7 @@ import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -30,13 +31,13 @@ public class HomeController {
     public String homePage(HttpServletRequest request, Model model) {
         try {
             if (!authService.isAuthenticated(request)) {
-                return "redirect:/loginPage";
+                return "redirect:/login";
             }
             model.addAttribute("users", userService.getAllUsers());
             model.addAttribute("vehicles", vehicleService.getAllVehicles());
             return "index";
         } catch (Exception e) {
-            return "redirect:/loginPage";
+            return "redirect:/login";
         }
     }
 
@@ -75,17 +76,29 @@ public class HomeController {
     }
    
     @GetMapping("/add-auth")
-    public String addAuthPage(Model model, HttpServletRequest request) {
+    public String addAuthPage(Model model, HttpSession session) {
         try {
-            if (authService.isAuthenticated(request)){
-            return "index";
-        }
-        System.out.println("inside the add-auth page controller");
-        model.addAttribute("authUser", new AuthUser());
-        return "register";
+            UserInfo registeredUser = (UserInfo) session.getAttribute("registeredUser");
+            
+            if (registeredUser == null || registeredUser.getUserId() == null) {
+                System.out.println("No user found in session or userId is null");
+                return "redirect:/register"; // If no user in session, redirect back
+            }
+    
+            System.out.println("User found in session with ID: " + registeredUser.getUserId());
+    
+            AuthUser authUser = new AuthUser();
+            authUser.setUser(registeredUser); // Set the UserInfo reference in AuthUser
+    
+            model.addAttribute("authUser", authUser);
+            return "ADD_auth";
         } catch (Exception e) {
-            return "Something went wrong " + e.getMessage();
+            return "error-page"; 
         }
     }
+
+    
+
+    
 
 }

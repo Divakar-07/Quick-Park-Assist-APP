@@ -10,6 +10,7 @@ import com.qpa.entity.Spot;
 import com.qpa.repository.LocationRepository;
 import com.qpa.repository.SpotRepository;
 
+
 @Service
 public class SpotService {
     @Autowired private SpotRepository spotRepository;
@@ -20,6 +21,7 @@ public class SpotService {
         if (!location.isPresent()){
             throw new RuntimeException("location with the requested locationId doesn't exist");
         }
+
         spot.setLocation(location.get());
         return spotRepository.save(spot);
     }

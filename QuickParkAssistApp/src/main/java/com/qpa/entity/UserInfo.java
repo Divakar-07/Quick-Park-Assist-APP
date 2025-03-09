@@ -1,6 +1,7 @@
 package com.qpa.entity;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -11,8 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -67,13 +67,18 @@ public class UserInfo {
     @Column(nullable = false)
     private Status status = Status.ACTIVE; // Default status
 
-    @OneToOne
-    @JoinColumn(name = "auth_id", referencedColumnName = "auth_Id", nullable = true)
-    private AuthUser authUser;
-
-
     // Default constructor
     public UserInfo() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (dateOfRegister == null) {
+            dateOfRegister = LocalDate.now();
+        }
+        if (status == null) {
+            status = Status.ACTIVE;
+        }
     }
 
     // Getters and Setters
@@ -158,12 +163,13 @@ public class UserInfo {
         this.status = status;
     }
 
-    public AuthUser getAuthUser() {
-        return authUser;
+
+    public String getFormattedDateOfRegister() {
+        return dateOfRegister != null ? dateOfRegister.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
     }
 
-    public void setAuthUser(AuthUser authUser) {
-        this.authUser = authUser;
+    public String getFormattedDob() {
+        return dob != null ? dob.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
     }
 
     // Enums

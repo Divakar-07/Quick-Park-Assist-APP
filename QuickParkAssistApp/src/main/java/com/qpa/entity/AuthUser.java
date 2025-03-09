@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "auth_user")
@@ -28,8 +29,10 @@ public class AuthUser {
     private String password; // Encrypted before saving
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
+    @NotNull
     private UserInfo user;
+
 
     public AuthUser() {}
 
@@ -66,7 +69,7 @@ public class AuthUser {
         return user;
     }
 
-    public void setUserId(UserInfo user) {
+    public void setUser(UserInfo user) {
         this.user = user;
     }
 }

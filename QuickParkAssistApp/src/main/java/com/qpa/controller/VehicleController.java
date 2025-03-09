@@ -78,14 +78,13 @@ public class VehicleController {
         return vehicles;
     }
 
-    @GetMapping("/{bookingId}/vehicle")
+    @GetMapping("/booking/{bookingId}")
     public ResponseEntity<?> getVehicleByBookingId(@PathVariable Long bookingId, HttpServletRequest request) {
         
         if (!authService.isAuthenticated(request)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized request"));
         }
         
-        vehicleService.findByBookingId( bookingId);
         
         return ResponseEntity.ok(vehicleService.findByBookingId( bookingId));
     }

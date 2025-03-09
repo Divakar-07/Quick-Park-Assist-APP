@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="/favicon_io/site.webmanifest">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -29,14 +30,14 @@
     <!-- User Form -->
     <div class="container">
         <div class="form-card">
-            <h2 th:text="${user.userId != null} ? 'Edit User' : 'New User'"></h2>
+            <h2 th:text="${user.userId != null} ? 'Edit User' : 'New User'" class="mb-10"></h2>
             <form th:action="@{/users/save}" th:object="${user}" method="post">
                 <input type="hidden" th:field="*{userId}">
 
                 <!-- Date of Registration -->
                 <div class="form-group">
                     <label>Date of Registration</label>
-                    <input type="date" th:field="*{dateOfRegister}" required min="1900-01-01" max="2025-12-31">
+                    <input type="date" value="12-12-2024" th:field="*{dateOfRegister}" th:value="${user.getFormattedDateOfRegister()}" required min="1900-01-01" max="2025-12-31">
                 </div>
 
                 <!-- First Name -->
@@ -51,10 +52,11 @@
                     <input type="text" th:field="*{lastName}" required placeholder="e.g Sharma">
                 </div>
 
+
                 <!-- Date of Birth -->
                 <div class="form-group">
                     <label>Date of Birth</label>
-                    <input type="date" th:field="*{dob}" required min="1900-01-01" max="2025-12-31">
+                    <input type="date" th:field="*{dob}" th:value="${user.getFormattedDob()}" required min="1900-01-01" max="2025-12-31">
                 </div>
 
                 <!-- Email -->
@@ -63,23 +65,10 @@
                     <input type="email" th:field="*{email}" class="form-control" required placeholder="e.g: divakar.sharma@example.com">
                     <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                 </div>
-                <!-- Email -->
-                <div class="form-group">
-                    <label>username</label>
-                    <input type="text" th:field="*{username}" class="form-control" required placeholder="e.g: divakar@123">
-                    <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-                </div>
-                <!-- Email -->
-                <div class="form-group">
-                    <label>password</label>
-                    <input type="password" th:field="*{password}" class="form-control" required placeholder="e.g: divakar.sharma@example.com">
-                    <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-                </div>
-
                 <!-- Contact Number -->
                 <div class="form-group">
                     <label>Contact Number</label>
-                    <input type="tel" th:field="*{contactNumber}" class="form-control" required pattern="\+91[6-9][0-9]{9}" placeholder="e.g: +919876543210">
+                    <input type="tel" th:field="*{contactNumber}" class="form-control" required pattern="\[6-9][0-9]{9}" placeholder="e.g: +919876543210">
                     <div class="error" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></div>
                 </div>
 
@@ -99,7 +88,7 @@
                 </div>
 
                 <!-- Status -->
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label>Status</label>
                     <select th:field="*{status}">
                         <option value="ACTIVE">Active</option>

@@ -36,6 +36,7 @@ public class SpotBookingService {
         }
 
         bookingInfo.setVehicle(vehicle.get());
+        bookingInfo.setSpot(spot.get());
         return spotBookingInfoRepository.save(bookingInfo);
     
 }

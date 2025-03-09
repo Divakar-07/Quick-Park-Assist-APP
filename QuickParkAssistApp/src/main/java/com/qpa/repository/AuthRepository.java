@@ -10,4 +10,6 @@ import com.qpa.entity.AuthUser;
 @Repository
 public interface AuthRepository extends JpaRepository<AuthUser, Long> {
     Optional<AuthUser> findByUsername(String username);
+    Optional<AuthUser> findByUser_UserId(Long userId);
+
 }
