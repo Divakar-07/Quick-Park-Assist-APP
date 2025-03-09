@@ -2,8 +2,11 @@ package com.qpa.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.qpa.entity.Vehicle;
 import com.qpa.exception.InvalidEntityException;
+import com.qpa.service.AuthService;
 import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
@@ -26,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class VehicleController {
     @Autowired private VehicleService vehicleService;
     @Autowired private UserService userService;
+    @Autowired private AuthService authService;
 
     @GetMapping("/new")
     public String showAddForm(Model model) {
@@ -74,8 +79,15 @@ public class VehicleController {
     }
 
     @GetMapping("/{bookingId}/vehicle")
-    public Vehicle getVehicleByBookingId(@PathVariable Long bookingId, HttpServletRequest request) {
-        return vehicleService.findByBookingId(request, bookingId);
+    public ResponseEntity<?> getVehicleByBookingId(@PathVariable Long bookingId, HttpServletRequest request) {
+        
+        if (!authService.isAuthenticated(request)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized request"));
+        }
+        
+        vehicleService.findByBookingId( bookingId);
+        
+        return ResponseEntity.ok(vehicleService.findByBookingId( bookingId));
     }
 	/*
 	addVehicle

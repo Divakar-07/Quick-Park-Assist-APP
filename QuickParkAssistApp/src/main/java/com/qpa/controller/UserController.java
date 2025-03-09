@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.qpa.dto.RegisterRequest;
-import com.qpa.entity.AuthUser;
+
 import com.qpa.entity.UserInfo;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;

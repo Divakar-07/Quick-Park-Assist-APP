@@ -22,9 +22,6 @@ public class VehicleService {
     
     @Autowired 
     private VehicleRepository vehicleRepository;
-    
-    @Autowired
-    private AuthService authService; 
 
     @Autowired
     private SpotBookingInfoRepository spotBookingInfoRepository;
@@ -92,10 +89,7 @@ public class VehicleService {
         vehicleRepository.delete(vehicle);
     }
 
-    public Vehicle findByBookingId(HttpServletRequest request, Long bookingId){
-        if (!authService.isAuthenticated(request)){
-            throw new RuntimeException("unAuthorized request");
-        }
+    public Vehicle findByBookingId(Long bookingId){
         Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
         return bookingInfo.map(SpotBookingInfo::getVehicle).orElse(null);
 
