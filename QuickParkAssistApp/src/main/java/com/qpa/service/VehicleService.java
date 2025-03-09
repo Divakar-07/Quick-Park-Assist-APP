@@ -1,22 +1,65 @@
 package com.qpa.service;
 
-import com.qpa.entity.Vehicle;
-import com.qpa.exception.InvalidEntityException;
-import com.qpa.repository.VehicleRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import com.qpa.entity.SpotBookingInfo;
+import com.qpa.entity.UserInfo;
+import com.qpa.entity.Vehicle;
+import com.qpa.exception.InvalidEntityException;
+import com.qpa.repository.SpotBookingInfoRepository;
+import com.qpa.repository.UserRepository;
+import com.qpa.repository.VehicleRepository;
+import com.qpa.security.JwtUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class VehicleService {
     
     @Autowired 
     private VehicleRepository vehicleRepository;
+    
+    @Autowired
+    private AuthService authService; 
+
+    @Autowired
+    private SpotBookingInfoRepository spotBookingInfoRepository;
+
+    @Autowired 
+    private JwtUtil jwtUtil;
+
+    @Autowired 
+    private UserRepository userRepository;
 
     // Add a new vehicle
-    public Vehicle addVehicle(Vehicle vehicle) { 
-        return vehicleRepository.save(vehicle); 
+    public Vehicle addVehicle(Vehicle vehicle, HttpServletRequest request) { 
+        String token = jwtUtil.extractTokenFromCookie(request);
+    
+        if (token == null) {
+            throw new RuntimeException("Token not found in cookies");
+        }
+    
+        Long userId = jwtUtil.extractUserId(token);
+    
+        if (userId == null) {
+            throw new RuntimeException("Invalid token: User ID not found");
+        }
+    
+        Optional<UserInfo> userObj = userRepository.findById(userId);
+        
+        if (userObj.isPresent()) {
+            UserInfo user = userObj.get();
+            vehicle.setUserObj(user);
+            return vehicleRepository.save(vehicle); 
+        } else {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
     }
+    
 
     // Get vehicle by ID (throws exception if not found)
     public Vehicle getVehicleById(Long id) { 
@@ -47,5 +90,14 @@ public class VehicleService {
     public void deleteVehicle(Long id) { 
         Vehicle vehicle = getVehicleById(id);  // Ensures existence before deletion
         vehicleRepository.delete(vehicle);
+    }
+
+    public Vehicle findByBookingId(HttpServletRequest request, Long bookingId){
+        if (!authService.isAuthenticated(request)){
+            throw new RuntimeException("unAuthorized request");
+        }
+        Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
+        return bookingInfo.map(SpotBookingInfo::getVehicle).orElse(null);
+
     }
 }

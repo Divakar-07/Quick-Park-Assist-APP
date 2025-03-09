@@ -28,32 +28,37 @@ public class JwtUtil {
         return Base64.getEncoder().encodeToString(SECRET_KEY.getEncoded());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, Long userId) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)  // ✅ Adding userId to the token
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours validity
                 .signWith(SECRET_KEY)
                 .compact();
     }
-    public boolean clearCookies (HttpServletResponse response){
 
-      try {
-          Cookie cookie = new Cookie("jwt", null);
-          cookie.setHttpOnly(true);
-          cookie.setSecure(true); // Set to false if not using HTTPS
-          cookie.setPath("/");
-          cookie.setMaxAge(0); // Expire the cookie immediately
-          response.addCookie(cookie);
-
-          return true;
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-        return false;
-      }
+    public boolean clearCookies(HttpServletResponse response) {
+        try {
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true); // Set to false if not using HTTPS
+            cookie.setPath("/");
+            cookie.setMaxAge(0); // Expire the cookie immediately
+            response.addCookie(cookie);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
+
     public String extractUsername(String token) {
         return extractClaims(token).getSubject();
+    }
+
+    public Long extractUserId(String token) {
+        return extractClaims(token).get("userId", Long.class); // ✅ Extract userId
     }
 
     public boolean validateToken(String token, String username) {
@@ -61,7 +66,7 @@ public class JwtUtil {
     }
 
     private Claims extractClaims(String token) {
-        return Jwts.parserBuilder() // ✅ Fix: Use parserBuilder() instead of parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token)
@@ -72,7 +77,7 @@ public class JwtUtil {
         return extractClaims(token).getExpiration().before(new Date());
     }
 
-     public String extractTokenFromCookie(HttpServletRequest request) {
+    public String extractTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -84,13 +89,10 @@ public class JwtUtil {
         return null;
     }
 
-      public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token) {
         Claims claims = extractClaims(token);
         String username = claims.getSubject();
-
-        // Assuming roles are stored as a list of strings in the token (modify if needed)
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
     }
 }

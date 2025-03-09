@@ -1,10 +1,12 @@
 package com.qpa.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.qpa.entity.AuthUser;
+import com.qpa.entity.UserInfo;
+import com.qpa.service.AuthService;
 import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
@@ -16,16 +18,18 @@ public class HomeController {
 
     private final UserService userService;
     private final VehicleService vehicleService;
+    private final AuthService authService;
 
-    public HomeController(UserService userService, VehicleService vehicleService) {
+    public HomeController(UserService userService, VehicleService vehicleService, AuthService authService) {
         this.userService = userService;
         this.vehicleService = vehicleService;
+        this.authService = authService;
     }
 
     @GetMapping("/")
     public String homePage(HttpServletRequest request, Model model) {
         try {
-            if (!userService.isAuthenticated(request)) {
+            if (!authService.isAuthenticated(request)) {
                 return "redirect:/loginPage";
             }
             model.addAttribute("users", userService.getAllUsers());
@@ -33,44 +37,55 @@ public class HomeController {
             return "index";
         } catch (Exception e) {
             return "redirect:/loginPage";
-            // TODO: handle exception
         }
     }
 
     @GetMapping("/contact")
     public String contactPage(HttpServletRequest request) {
-        if (!userService.isAuthenticated(request)) {
+        if (!authService.isAuthenticated(request)) {
             return "redirect:/users/login";
         }
         return "contact";
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<Boolean> checkAuth(HttpServletRequest request) {
-        return ResponseEntity.ok(userService.isAuthenticated(request));
-    }
-
-    @GetMapping("/loginPage")
+    @GetMapping("/login")
     public String loginPage(HttpServletRequest request) {
         try {
-            if (userService.isAuthenticated(request)){
+            if (authService.isAuthenticated(request)){
                 return "index";
             }
             return "Login";
         } catch (Exception e) {
             return "Login";
-            // TODO: handle exception
         }
     }
     
-    @GetMapping("/registerPage")
-    public String registerPage(HttpServletRequest request) {
-        if (userService.isAuthenticated(request)){
+    @GetMapping("/register")
+    public String registerPage(Model model, HttpServletRequest request) {
+        try {
+            if (authService.isAuthenticated(request)){
             return "index";
         }
-        return "Register";
+        System.out.println("inside the register page controller");
+        model.addAttribute("user", new UserInfo());
+        return "register";
+        } catch (Exception e) {
+            return "Something went wrong " + e.getMessage();
+        }
     }
-
-    
+   
+    @GetMapping("/add-auth")
+    public String addAuthPage(Model model, HttpServletRequest request) {
+        try {
+            if (authService.isAuthenticated(request)){
+            return "index";
+        }
+        System.out.println("inside the add-auth page controller");
+        model.addAttribute("authUser", new AuthUser());
+        return "register";
+        } catch (Exception e) {
+            return "Something went wrong " + e.getMessage();
+        }
+    }
 
 }

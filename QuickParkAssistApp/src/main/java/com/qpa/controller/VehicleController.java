@@ -1,18 +1,25 @@
 package com.qpa.controller;
 
 
-import com.qpa.entity.Vehicle;
-import com.qpa.exception.InvalidEntityException;
-import com.qpa.service.UserService;
-import com.qpa.service.VehicleService;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.qpa.entity.Vehicle;
+import com.qpa.exception.InvalidEntityException;
+import com.qpa.service.UserService;
+import com.qpa.service.VehicleService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/vehicles")
@@ -28,8 +35,8 @@ public class VehicleController {
     }
 
     @PostMapping("/save")
-    public String saveVehicle(@ModelAttribute("vehicle") Vehicle vehicle, RedirectAttributes ra) {
-        vehicleService.addVehicle(vehicle);
+    public String saveVehicle(@ModelAttribute("vehicle") Vehicle vehicle, RedirectAttributes ra, HttpServletRequest request) {
+        vehicleService.addVehicle(vehicle, request);
         ra.addFlashAttribute("success", "Vehicle saved successfully!");
         return "redirect:/";
     }
@@ -64,6 +71,11 @@ public class VehicleController {
             throw new InvalidEntityException("No vehicles found for type: " + vehicleType);
         }
         return vehicles;
+    }
+
+    @GetMapping("/{bookingId}/vehicle")
+    public Vehicle getVehicleByBookingId(@PathVariable Long bookingId, HttpServletRequest request) {
+        return vehicleService.findByBookingId(request, bookingId);
     }
 	/*
 	addVehicle

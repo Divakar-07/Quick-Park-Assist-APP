@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-6">Add Authentication</h2>
+
+        <form th:action="@{/auth/save}" th:object="${authUser}" method="post" class="space-y-4">
+            <input type="hidden" th:field="*{authId}">
+
+            <!-- Username -->
+            <div>
+                <label class="block font-medium">Username</label>
+                <input type="text" th:field="*{username}" required placeholder="e.g: divakar@123"
+                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="block font-medium">Password</label>
+                <input type="password" th:field="*{password}" required placeholder="Enter your password"
+                       class="w-full p-2 border rounded-md focus:ring focus:ring-blue-200">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-between">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                    Save Authentication
+                </button>
+                <a th:href="@{/}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
