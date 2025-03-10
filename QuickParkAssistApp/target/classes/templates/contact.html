@@ -9,6 +9,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="/favicon_io/site.webmanifest">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/homeScript.js}" defer></script>
+    <script th:src="@{/js/script.js}" defer></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -17,11 +20,7 @@
             <a href="/" class="logo">
                 <img th:src="@{/images/contact-women-talking-svgrepo-com.svg}" alt="Quick Park" width="50">
             </a>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/users/new">Add User</a></li>
-                <li><a href="/vehicles/new">Add Vehicle</a></li>
-                <li><a href="/contact">Contact</a></li>
+            <ul class="nav-links" id="nav-links-js">
             </ul>
         </div>
     </nav>

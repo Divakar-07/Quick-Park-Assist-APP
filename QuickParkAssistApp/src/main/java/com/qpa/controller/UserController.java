@@ -1,6 +1,7 @@
 package com.qpa.controller;
 
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,16 @@ import com.qpa.entity.UserInfo;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;
 import com.qpa.service.UserService;
+import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.qpa.entity.Vehicle;
+
 
 
 
@@ -32,9 +39,17 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
     @Autowired private UserService userService;
     @Autowired private AuthService authService;
+    @Autowired private VehicleService vehicleService;
 
     
 
+    @GetMapping("/")
+    public ResponseEntity<?> getUserProfile(HttpServletRequest request){
+        Long userId = authService.getUserId(request);
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    
     @PostMapping("/save")
     public ResponseEntity<?> register(@ModelAttribute UserInfo user, HttpServletRequest request, HttpSession session) {
     try {
@@ -68,10 +83,6 @@ public class UserController {
     @PostMapping("/edit-save")
     public ResponseEntity<?> saveEdit(@ModelAttribute UserInfo user, HttpServletRequest request, HttpSession session) {
     try {
-        if (authService.isAuthenticated(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Already logged in"));
-        }
-
         // Save the user and retrieve the saved entity with an ID
         UserInfo savedUser = userService.addUser(user);
 
@@ -80,15 +91,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "User ID was not generated"));
         }
 
-        // Store user in session
-        session.setAttribute("registeredUser", savedUser);
 
         // Redirect to "/add-auth"
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header("Location", "/add-auth")
-                .build();
+        return ResponseEntity.status(HttpStatus.OK).body("edit successfull");
 
-    } catch (DataIntegrityViolationException e) { 
+    } catch (DataIntegrityViolationException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "User already exists"));
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal server error", "details", e.getMessage()));
@@ -106,7 +113,6 @@ public class UserController {
         }
             
     }
-
 
 
     @GetMapping("/delete")
@@ -154,6 +160,30 @@ public class UserController {
         return ResponseEntity.status(400).body(e.getMessage());
     }
     }
+    
+    @GetMapping("/getUserDetails")
+    public ResponseEntity<?> getUserDetails(HttpServletRequest request) {
+        try {
+            if (!authService.isAuthenticated(request)){
+                return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                    .header("Location", "/login")
+                    .build();
+            }
+
+            Long userId = authService.getUserId(request);
+            UserInfo user = userService.getUserById(userId);
+            List<Vehicle> vehicles = vehicleService.findByUserId(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("user", user);
+            response.put("vehicles", vehicles);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     
 
 }

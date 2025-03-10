@@ -1,5 +1,6 @@
 package com.qpa.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,9 @@ public class SpotService {
 
         spot.setLocation(location.get());
         return spotRepository.save(spot);
+    }
+
+    public List<Spot> getAllSpots(){
+        return spotRepository.findAll();
     }
 }

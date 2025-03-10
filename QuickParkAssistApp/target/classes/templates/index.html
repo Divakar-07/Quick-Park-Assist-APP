@@ -23,25 +23,22 @@
       href="/favicon_io/favicon-16x16.png"
     />
     <link rel="manifest" href="/favicon_io/site.webmanifest" />
+    <script th:src="@{/js/homeScript.js}" defer></script>
     <script th:src="@{/js/script.js}" defer></script>
     <link rel="stylesheet" href="/css/styles.css" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
     <nav class="navbar">
-      <div class="nav-container">
+      <div class="nav-container" id="nav-container-js">
         <a href="/" class="logo"
           ><img
             th:src="@{\images\parked-car-svgrepo-com.svg}"
             alt="Quick Park"
             width="50"
         /></a>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/users/new">Add User</a></li>
-          <li><a href="/vehicles/new">Add Vehicle</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><button id="logout" class="text-white border bg-blue-500 px-3 py-1 rounded-md">logout</button></li>
+        <ul class="nav-links" id="nav-links-js">
+          <!-- fetching it from js  -->
         </ul>
       </div>
     </nav>
@@ -171,24 +168,5 @@
       <h1>Welcome to Quick Park Assist</h1>
       <p>© 2025 Quick Park Assist. All rights reserved.</p>
     </main>
-
-    <script>
-      const logoutBtn = document.getElementById("logout");
-      logoutBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        fetch("/auth/logout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
-        }).then((response) => {
-          if (response.ok) {
-            window.location.href = "/users/login";
-          } else {
-            alert("Unauthorized request");
-            window.location.href = "/users/login";
-          }
-        });
-      });
-    </script>
   </body>
 </html>

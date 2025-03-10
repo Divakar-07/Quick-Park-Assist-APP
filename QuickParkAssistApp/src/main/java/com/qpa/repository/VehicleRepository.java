@@ -8,4 +8,5 @@ import com.qpa.entity.Vehicle;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     List<Vehicle> findByVehicleType(String vehicleType);
+    List<Vehicle> findByUserObj_UserId(Long userId);
 }

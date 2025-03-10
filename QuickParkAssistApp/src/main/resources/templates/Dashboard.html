@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QuickParkAssist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/dashboard_script.js}" defer></script>
+    <script th:src="@{/js/homeScript.js}" defer></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script th:src="@{/js/script.js}" defer></script>
+  </head>
+  <body class="bg-gray-100">
+    <nav class="navbar">
+      <div class="nav-container" id="nav-container-js">
+        <a href="/" class="logo"
+          ><img
+            th:src="@{\images\parked-car-svgrepo-com.svg}"
+            alt="Quick Park"
+            width="50"
+        /></a>
+        <ul class="nav-links" id="nav-links-js">
+          <!-- fetching it from js  -->
+        </ul>
+      </div>
+    </nav>
+
+    <div class=" max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-4">User Details</h2>
+      <div id="user-details" class="space-y-2 w-full"></div>
+    </div>
+  </body>
+</html>

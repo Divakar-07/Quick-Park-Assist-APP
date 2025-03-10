@@ -1,5 +1,6 @@
 package com.qpa.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import com.qpa.service.SpotService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/spot")
@@ -28,6 +31,14 @@ public class SpotController {
     @Autowired 
     private AuthService authService;
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllSpots(HttpServletRequest request) {
+        if (authService.isAuthenticated(request)) {
+            List<Spot> spots = spotService.getAllSpots();
+            return ResponseEntity.ok(spots); // Return spots as JSON
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+    }
     @PostMapping("/location/{locationId}/add")
     public ResponseEntity<?> addSpot(@RequestBody Spot spot, @PathVariable Long locationId, HttpServletRequest request) {
         if (!authService.isAuthenticated(request)){

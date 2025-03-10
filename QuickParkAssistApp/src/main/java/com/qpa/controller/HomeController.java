@@ -12,6 +12,8 @@ import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Controller
@@ -97,8 +99,30 @@ public class HomeController {
         }
     }
 
-    
+    @GetMapping("/spots/all")
+    public String allSpotsPage(HttpServletRequest request) {
+        try {
+            if (authService.isAuthenticated(request)){
+                return "ALL_spots";
+            }
+            return "Login";
+        } catch (Exception e) {
+            return "error";
+        }
+    }
 
+    @GetMapping("/user/profile")
+    public String getUserDashboard(HttpServletRequest request) {
+        try {
+            if (authService.isAuthenticated(request)){
+                return "Dashboard";
+            }
+            return "Login";
+        } catch (Exception e) {
+            return "error";
+        }
+    }
+    
     
 
 }

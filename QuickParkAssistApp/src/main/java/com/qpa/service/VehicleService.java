@@ -93,4 +93,9 @@ public class VehicleService {
         Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
         return bookingInfo.get().getVehicle();
     }
+
+    public List<Vehicle> findByUserId(Long userId){
+        return vehicleRepository.findByUserObj_UserId(userId);
+    }
+    
 }
