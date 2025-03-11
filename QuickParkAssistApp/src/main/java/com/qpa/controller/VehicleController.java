@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.qpa.entity.UserInfo;
 import com.qpa.entity.Vehicle;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;
@@ -33,9 +34,14 @@ public class VehicleController {
     @Autowired private AuthService authService;
 
     @GetMapping("/new")
-    public String showAddForm(Model model) {
+    public String showAddForm(Model model, HttpServletRequest request) {
         model.addAttribute("vehicle", new Vehicle());
-        model.addAttribute("users", userService.getAllUsers());
+        Long userId = authService.getUserId(request);
+        UserInfo user = userService.getUserById(userId);
+        if (user == null){
+            System.out.println("user not found!");
+        }
+        model.addAttribute("user", user);
         return "ADD_vehicle";
     }
 

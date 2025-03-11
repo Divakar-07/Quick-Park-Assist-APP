@@ -1,102 +1,167 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quick Park Assist - Add Vehicle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script th:src="@{/js/homeScript.js}" defer></script>
     <link rel="stylesheet" href="/css/styles.css" />
     <script th:src="@{/js/script.js}" defer></script>
-</head>
-<body class="bg-gray-100">
+  </head>
+  <body class="bg-gray-100">
     <nav class="navbar">
-        <div class="nav-container" id="nav-container-js">
-          <a href="/" class="logo"
-            ><img
-              th:src="@{\images\parked-car-svgrepo-com.svg}"
-              alt="Quick Park"
-              width="50"
-          /></a>
-          <ul class="nav-links" id="nav-links-js">
-            <!-- fetching it from js  -->
-          </ul>
-        </div>
-      </nav>
+      <div class="nav-container" id="nav-container-js">
+        <a href="/" class="logo"
+          ><img
+            th:src="@{/images/parked-car-svgrepo-com.svg}"
+            alt="Quick Park"
+            width="50"
+          />
+        </a>
+        <ul class="nav-links" id="nav-links-js">
+          <!-- fetching it from js  -->
+        </ul>
+      </div>
+    </nav>
 
     <div class="flex justify-center items-center min-h-screen">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center" th:text="${vehicle.vehicleId != null} ? 'Edit Vehicle' : 'Add New Vehicle'"></h2>
-            
-            <form th:action="@{/vehicles/save}" th:object="${vehicle}" method="post" class="space-y-4">
-                <input type="hidden" th:field="*{vehicleId}">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <h2
+          class="text-2xl font-semibold text-gray-800 mb-4 text-center"
+          th:text="${vehicle.vehicleId != null} ? 'Edit Vehicle' : 'Add New Vehicle'"
+        ></h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Registration Number -->
-                    <div>
-                        <label class="block text-gray-700 font-medium">Registration Number</label>
-                        <input type="text" th:field="*{registrationNumber}" required 
-                               class="w-full p-2 border rounded-md" placeholder="e.g MH12AB1234">
-                    </div>
+        <form
+          th:action="@{/vehicles/save}"
+          th:object="${vehicle}"
+          method="post"
+          class="space-y-4"
+        >
+          <input type="hidden" th:field="*{vehicleId}" />
 
-                    <!-- Vehicle Type -->
-                    <div>
-                        <label class="block text-gray-700 font-medium">Vehicle Type</label>
-                        <select th:field="*{vehicleType}" class="w-full p-2 border rounded-md">
-                            <option value="CAR">Car</option>
-                            <option value="BIKE">Bike</option>
-                            <option value="TRUCK">Truck</option>
-                            <option value="OTHER">Other</option>
-                        </select>
-                    </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Registration Number -->
+            <div>
+              <label class="block text-gray-700 font-medium"
+                >Registration Number</label
+              >
+              <input
+                type="text"
+                th:field="*{registrationNumber}"
+                required
+                class="w-full p-2 border rounded-md"
+                placeholder="e.g MH12AB1234"
+              />
+            </div>
 
-                    <!-- Brand -->
-                    <div>
-                        <label class="block text-gray-700 font-medium">Brand</label>
-                        <input type="text" th:field="*{brand}" required 
-                               class="w-full p-2 border rounded-md" placeholder="e.g. Toyota, Honda">
-                    </div>
+            <!-- Vehicle Type -->
+            <div>
+              <label class="block text-gray-700 font-medium"
+                >Vehicle Type</label
+              >
+              <select
+                th:field="*{vehicleType}"
+                class="w-full p-2 border rounded-md"
+              >
+                <option value="CAR">Car</option>
+                <option value="BIKE">Bike</option>
+                <option value="TRUCK">Truck</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
 
-                    <!-- Model -->
-                    <div>
-                        <label class="block text-gray-700 font-medium">Model</label>
-                        <input type="text" th:field="*{model}" required 
-                               class="w-full p-2 border rounded-md" placeholder="e.g. Fortuner, Civic">
-                    </div>
+            <!-- Brand -->
+            <div>
+              <label class="block text-gray-700 font-medium">Brand</label>
+              <input
+                type="text"
+                th:field="*{brand}"
+                required
+                class="w-full p-2 border rounded-md"
+                placeholder="e.g. Toyota, Honda"
+              />
+            </div>
 
-                    <!-- Registration Date -->
-                    <div>
-                        <label class="block text-gray-700 font-medium">Registration Date</label>
-                        <input type="date" th:field="*{registrationDate}" required 
-                               class="w-full p-2 border rounded-md" min="1900-01-01" max="2025-12-31">
-                    </div>
+            <!-- Model -->
+            <div>
+              <label class="block text-gray-700 font-medium">Model</label>
+              <input
+                type="text"
+                th:field="*{model}"
+                required
+                class="w-full p-2 border rounded-md"
+                placeholder="e.g. Fortuner, Civic"
+              />
+            </div>
 
-                    <!-- Active Status -->
-                    <div class="flex items-center">
-                        <input type="checkbox" th:field="*{active}" class="w-5 h-5 text-blue-600">
-                        <label class="ml-2 text-gray-700 font-medium">Active</label>
-                    </div>
+            <!-- Registration Date -->
+            <div>
+              <label class="block text-gray-700 font-medium"
+                >Registration Date</label
+              >
+              <input
+                type="date"
+                th:field="*{registrationDate}"
+                required
+                class="w-full p-2 border rounded-md"
+                min="1900-01-01"
+                max="2025-12-31"
+              />
+            </div>
 
-                    <!-- Owner (User) Selection -->
-                    <div class="col-span-2">
-                        <label class="block text-gray-700 font-medium">Owner (User)</label>
-                        <select th:field="*{userObj}" required class="w-full p-2 border rounded-md">
-                            <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.firstName + ' ' + user.lastName}"></option>
-                        </select>
-                    </div>
-                </div>
+            <!-- Active Status -->
+            <div class="flex items-center">
 
-                <!-- Form Actions -->
-                <div class="flex justify-between mt-4">
-                    <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
-                        <span th:text="${vehicle.vehicleId != null} ? 'Update' : 'Create'"></span>
-                    </button>
-                    <a th:href="@{/}" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
-                        Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
+              <input
+                type="checkbox"
+                th:field="*{active}"
+                class="w-5 h-5 text-blue-600"
+              />
+              <label class="ml-2 text-gray-700 font-medium">Active</label>
+            </div>
+
+            <!-- Owner (User) Selection -->
+            <div class="col-span-2">
+              <label class="block text-gray-700 font-medium"
+                >Owner (User)</label
+              >
+              <div class="w-full p-2 border rounded-md">
+                <input
+                  type="hidden"
+                  th:field="*{userObj}"
+                  th:value="${user.userId}"
+                />
+
+                <input
+                  type="text"
+                  class="w-full p-2 border rounded-md"
+                  th:value="${user.firstName + ' ' + user.lastName}"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex justify-between mt-4">
+            <button
+              type="submit"
+              class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+            >
+              <span
+                th:text="${vehicle.vehicleId != null} ? 'Update' : 'Create'"
+              ></span>
+            </button>
+            <a
+              th:href="@{/}"
+              class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600"
+            >
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
 </html>
