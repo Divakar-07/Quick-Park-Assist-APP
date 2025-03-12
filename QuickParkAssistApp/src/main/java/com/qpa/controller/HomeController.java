@@ -12,7 +12,7 @@ import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -43,10 +43,22 @@ public class HomeController {
         }
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard(HttpServletRequest request){
+        try {
+            if (!authService.isAuthenticated(request)) {
+                return "redirect:/login";
+            }
+            return "dashboard";
+        } catch (Exception e) {
+            return "redirect:/login";
+        }
+    }
+
     @GetMapping("/contact")
     public String contactPage(HttpServletRequest request) {
         if (!authService.isAuthenticated(request)) {
-            return "redirect:/users/login";
+            return "redirect:/login";
         }
         return "contact";
     }
@@ -55,7 +67,7 @@ public class HomeController {
     public String loginPage(HttpServletRequest request) {
         try {
             if (authService.isAuthenticated(request)){
-                return "index";
+                return "redirect:/dashboard";
             }
             return "Login";
         } catch (Exception e) {
@@ -105,7 +117,7 @@ public class HomeController {
             if (authService.isAuthenticated(request)){
                 return "ALL_spots";
             }
-            return "Login";
+            return "redirect:/login";
         } catch (Exception e) {
             return "error";
         }
@@ -115,9 +127,9 @@ public class HomeController {
     public String getUserDashboard(HttpServletRequest request) {
         try {
             if (authService.isAuthenticated(request)){
-                return "Dashboard";
+                return "profile";
             }
-            return "Login";
+            return "redirect:/login";
         } catch (Exception e) {
             return "error";
         }

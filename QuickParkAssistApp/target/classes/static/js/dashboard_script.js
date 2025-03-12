@@ -10,69 +10,82 @@ async function getUserDetails() {
     const userContainer = document.getElementById("user-details");
 
     userContainer.innerHTML = `
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div>
-            <label class="block font-medium">First Name:</label>
+        <div class="row g-3 text-dark">
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">First Name:</label>
             <input type="text" value="${
-              user.firstName
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+              user.fullName
+            }" class="form-control bg-light" readonly />
           </div>
-          <div>
-            <label class="block font-medium">Last Name:</label>
-            <input type="text" value="${
-              user.lastName
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Contact:</label>
+            <input type="number" placeholder="Enter your contact details" value="${
+              user.contactNumber ? user.contactNumber : ""
+            }" class="form-control bg-light" ${
+      user.contactNumber ? "" : "readonly"
+    } />
           </div>
-          <div>
-            <label class="block font-medium">Contact:</label>
-            <input type="text" value="${
-              user.contactNumber
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
-          </div>
-          <div>
-            <label class="block font-medium">Email:</label>
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Email:</label>
             <input type="text" value="${
               user.email
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
-          <div>
-            <label class="block font-medium">Address:</label>
-            <input type="text" value="${
-              user.address
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Address:</label>
+            <input type="text" placeholder="Enter your address" value="${
+              user.address ? user.address : ""
+            }" class="form-control bg-light" readonly />
           </div>
-          <div>
-            <label class="block font-medium">Date of Birth:</label>
-            <input type="text" value="${
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Date of Birth:</label>
+            <input type="date" value="${
               user.formattedDob
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" ${
+      user.formattedDob ? "" : "readonly"
+    } />
           </div>
-          <div>
-            <label class="block font-medium">Registered On:</label>
-            <input type="text" value="${
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Registered On:</label>
+            <input type="date" value="${
               user.formattedDateOfRegister
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
-          <div>
-            <label class="block font-medium">Status:</label>
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">Status:</label>
             <input type="text" value="${
               user.status
-            }" class="w-full p-2 border rounded-md bg-gray-100 text-${
-      user.status === "ACTIVE" ? "green" : "red"
-    }-500" readonly />
+            }" class="form-control bg-light text-${
+      user.status === "ACTIVE" ? "success" : "danger"
+    }" readonly />
           </div>
-          <div>
-            <label class="block font-medium">User Type:</label>
-            <input type="text" value="${user.userType.replace(
-              "_",
-              " "
-            )}" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label fw-medium">User Type:</label>
+            <select class="form-select bg-light" readonly>
+              <option value="SLOT OWNER" ${
+                user.userType?.replace("_", " ") === "SLOT OWNER"
+                  ? "selected"
+                  : ""
+              }>SLOT OWNER</option>
+              <option value="VEHICLE OWNER" ${
+                user.userType?.replace("_", " ") === "VEHICLE OWNER"
+                  ? "selected"
+                  : ""
+              }>VEHICLE OWNER</option>
+            </select>
           </div>
         </div>
   
-        <div class="mt-6">
-          <h2 class="text-xl font-bold mb-3">Vehicles</h2>
-          <div id="vehicles-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div class="mt-4">
+          <h2 class="fs-5 fw-bold mb-3">Vehicles</h2>
+          <div id="vehicles-list" class="row g-3"></div>
         </div>
       `;
 
@@ -80,48 +93,50 @@ async function getUserDetails() {
 
     vehicles.forEach((vehicle) => {
       const vehicleDiv = document.createElement("div");
-      vehicleDiv.className = "bg-gray-50 p-4 rounded-lg shadow-md";
+      vehicleDiv.className = "col-md-6 col-lg-4";
 
       vehicleDiv.innerHTML = `
+        <div class="bg-light p-3 rounded shadow-sm">
           <div>
-            <label class="block font-medium">Brand:</label>
+            <label class="form-label fw-medium">Brand:</label>
             <input type="text" value="${
               vehicle.brand
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
           <div>
-            <label class="block font-medium">Model:</label>
+            <label class="form-label fw-medium">Model:</label>
             <input type="text" value="${
               vehicle.model
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
           <div>
-            <label class="block font-medium">Type:</label>
+            <label class="form-label fw-medium">Type:</label>
             <input type="text" value="${
               vehicle.vehicleType
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
           <div>
-            <label class="block font-medium">Registration Number:</label>
+            <label class="form-label fw-medium">Registration Number:</label>
             <input type="text" value="${
               vehicle.registrationNumber
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
           <div>
-            <label class="block font-medium">Registration Date:</label>
+            <label class="form-label fw-medium">Registration Date:</label>
             <input type="text" value="${
               vehicle.registrationDate
-            }" class="w-full p-2 border rounded-md bg-gray-100" readonly />
+            }" class="form-control bg-light" readonly />
           </div>
           <div>
-            <label class="block font-medium">Status:</label>
+            <label class="form-label fw-medium">Status:</label>
             <input type="text" value="${
               vehicle.active ? "Active" : "Inactive"
-            }" class="w-full p-2 border rounded-md bg-gray-100 text-${
-        vehicle.active ? "green" : "red"
-      }-500" readonly />
+            }" class="form-control bg-light text-${
+        vehicle.active ? "success" : "danger"
+      }" readonly />
           </div>
-        `;
+        </div>
+      `;
 
       vehiclesList.appendChild(vehicleDiv);
     });

@@ -16,7 +16,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -27,45 +26,33 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @NotNull
     @Column(nullable = false)
-    private LocalDate dateOfRegister = LocalDate.now(); // Default to current date
+    private LocalDate dateOfRegister = LocalDate.now();
 
     @NotBlank
     @Column(nullable = false)
-    private String firstName;
+    private String fullName;
 
     @NotBlank
-    @Column(nullable = false)
-    private String lastName;
-
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate dob;
-
-    @NotBlank
-    @Email
+    @Email(message = "Invalid email format")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dob;  // Optional
 
-    @NotBlank
-    @Size(min = 10, max = 13)
+    @Size(min = 10, max = 13, message = "Contact number must be between 10 and 13 digits")
     @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits")
-    @Column(nullable = false, length = 13)
-    private String contactNumber;
+    @Column(length = 13)
+    private String contactNumber; // Optional
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(nullable = false)
-    private UserType userType;
+    private UserType userType; // Optional
 
-    private String address;
+    private String address; // Optional
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(nullable = false)
-    private Status status = Status.ACTIVE; // Default status
+    private Status status = Status.ACTIVE; // Default status, but can be null in DB
 
     // Default constructor
     public UserInfo() {
@@ -98,28 +85,12 @@ public class UserInfo {
         this.dateOfRegister = dateOfRegister;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -130,6 +101,14 @@ public class UserInfo {
         this.email = email;
     }
 
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
     public String getContactNumber() {
         return contactNumber;
     }
@@ -137,7 +116,6 @@ public class UserInfo {
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
-
 
     public UserType getUserType() {
         return userType;
@@ -162,7 +140,6 @@ public class UserInfo {
     public void setStatus(Status status) {
         this.status = status;
     }
-
 
     public String getFormattedDateOfRegister() {
         return dateOfRegister != null ? dateOfRegister.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";

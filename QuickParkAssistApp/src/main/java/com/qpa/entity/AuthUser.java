@@ -10,6 +10,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "auth_user")
@@ -24,9 +25,11 @@ public class AuthUser {
     @Column(nullable = false, unique = true)
     private String username;
 
+
     @NotBlank
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     @Column(nullable = false)
-    private String password; // Encrypted before saving
+    private String password;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)

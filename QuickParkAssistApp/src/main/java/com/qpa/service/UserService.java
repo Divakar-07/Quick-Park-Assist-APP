@@ -74,4 +74,7 @@ public class UserService {
         return viewUserByVehicleId(vehicle.getVehicleId());
     }
 
+    public boolean existsByEmail(String email){
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

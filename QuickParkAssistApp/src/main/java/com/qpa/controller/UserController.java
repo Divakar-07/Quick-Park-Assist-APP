@@ -14,10 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.qpa.dto.RegisterDto;
+import com.qpa.entity.AuthUser;
 import com.qpa.entity.UserInfo;
+import com.qpa.entity.Vehicle;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;
 import com.qpa.service.UserService;
@@ -27,9 +31,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.qpa.entity.Vehicle;
 
 
 
@@ -48,6 +49,37 @@ public class UserController {
         Long userId = authService.getUserId(request);
         return ResponseEntity.ok(userService.getUserById(userId));
     }
+
+    @PostMapping("/register")
+    public String register(@RequestBody RegisterDto request, HttpServletResponse response) {
+        try {
+
+            if (userService.existsByEmail(request.getEmail())) {
+                return "error";
+            }
+
+            UserInfo user = new UserInfo();
+
+            user.setEmail(request.getEmail());
+            user.setFullName(request.getFullName());
+            user = userService.addUser(user);
+
+            AuthUser authUser = new AuthUser();
+            authUser.setPassword(request.getPassword());
+            authUser.setUsername(request.getUsername());
+            authUser.setUser(user);
+            
+            if (!authService.addAuth(authUser, response)){
+                return "error";
+            }
+
+            return "redirect:/dashboard";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "register";
+        }
+    }
+    
 
     
     @PostMapping("/save")

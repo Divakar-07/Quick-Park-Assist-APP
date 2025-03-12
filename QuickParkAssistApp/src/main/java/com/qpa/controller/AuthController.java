@@ -41,7 +41,7 @@ public class AuthController {
         authService.addAuth(authUser, response);
         
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-        .header("Location", "/")
+        .header("Location", "/dashboard")
         .build();
     }
     
