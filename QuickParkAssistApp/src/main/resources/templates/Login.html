@@ -59,7 +59,7 @@
             <div class="mobile-toggle" style="display: none">
               <p>
                 Don't have an account?
-                <span onclick="mobileToggleForm()">Sign Up</span>
+                <span onclick="handleScreenToggle()">Sign Up</span>
               </p>
             </div>
           </form>
@@ -69,17 +69,22 @@
         <div class="form-section signup">
           <form onsubmit="signUp(event)" id="signup-form">
             <h2>Create Account</h2>
+
+            <div class="input-group" style="display: none">
+              <input type="text" id="signup-userType" />
+            </div>
+
             <div class="input-group">
               <input type="text" required id="signup-fullname" />
               <label>Full Name</label>
             </div>
             <div class="input-group">
-              <input type="email" required id="signup-email"/>
+              <input type="email" required id="signup-email" />
               <label>Email</label>
             </div>
 
             <div class="input-group">
-              <input type="text" required id="signup-username"/>
+              <input type="text" required id="signup-username" />
               <label>username</label>
             </div>
 
@@ -89,13 +94,39 @@
             </div>
 
             <div class="input-group">
-              <input type="password" required id="signup-password2"/>
+              <input type="password" required id="signup-password2" />
               <label>confirm Password</label>
             </div>
+
             <div class="mobile-toggle" style="display: none">
+              <!-- User Type Selection -->
+              <div
+                class="user-type-selection d-flex gap-2"
+                style="flex-direction: row"
+              >
+                <button
+                  type="button"
+                  class="user-type-btn"
+                  onclick="selectUserType('SLOT_OWNER')"
+                  data-type="SLOT_OWNER"
+                  style="color: black; border: 2px solid black"
+                >
+                  Sign Up as Slot Owner
+                </button>
+                <button
+                  style="color: black; border: 2px solid black"
+                  type="button"
+                  class="user-type-btn"
+                  data-type="VEHICLE_OWNER"
+                  onclick="selectUserType('VEHICLE_OWNER')"
+                >
+                  Sign Up as Vehicle Owner
+                </button>
+              </div>
+
               <p>
                 Already have an account?
-                <span onclick="mobileToggleForm()">Sign In</span>
+                <span onclick="handleScreenToggle()">Sign In</span>
               </p>
             </div>
             <button type="submit">Sign Up</button>
@@ -109,19 +140,38 @@
           <div class="overlay-section overlay-left">
             <h2>Hello, Friend!</h2>
             <p>Enter your personal details and start your journey with us</p>
-            <button onclick="toggleForm()">Sign IN</button>
+
+            <!-- User Type Selection -->
+            <div class="user-type-selection">
+              <button
+                class="user-type-btn"
+                data-type="SLOT_OWNER"
+                onclick="selectUserType('SLOT_OWNER')"
+              >
+                Sign Up as Slot Owner
+              </button>
+              <button
+                class="user-type-btn"
+                data-type="VEHICLE_OWNER"
+                onclick="selectUserType('VEHICLE_OWNER')"
+              >
+                Sign Up as Vehicle Owner
+              </button>
+            </div>
+
+            <button onclick="handleScreenToggle()">Sign IN</button>
           </div>
+
           <div class="overlay-section overlay-right">
             <h2>Welcome Back!</h2>
             <p>
               To keep connected with us please login with your personal info
             </p>
-            <button onclick="toggleForm()">Sign UP</button>
+            <button onclick="handleScreenToggle()">Sign UP</button>
           </div>
         </div>
       </div>
     </div>
-    <script th:src="@{/js/script.js}" defer></script>
     <script th:src="@{/js/login_script.js}" defer></script>
   </body>
 </html>

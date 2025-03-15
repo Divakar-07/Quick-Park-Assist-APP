@@ -16,6 +16,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -46,6 +47,8 @@ public class UserInfo {
     @Column(length = 13)
     private String contactNumber; // Optional
 
+    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType; // Optional
 
@@ -150,7 +153,6 @@ public class UserInfo {
     }
 
     // Enums
-    public enum UserType { VEHICLE_OWNER, SLOT_OWNER }
 
     public enum Status { ACTIVE, INACTIVE }
 }

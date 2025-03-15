@@ -49,15 +49,25 @@ public class VehicleController {
     public String saveVehicle(@ModelAttribute("vehicle") Vehicle vehicle, RedirectAttributes ra, HttpServletRequest request) {
         vehicleService.addVehicle(vehicle, request);
         ra.addFlashAttribute("success", "Vehicle saved successfully!");
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
+    
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("vehicle", vehicleService.getVehicleById(id));
-        model.addAttribute("users", userService.getAllUsers());
+    public String showEditForm(@PathVariable Long id, Model model, HttpServletRequest request) {
+        Vehicle vehicle = vehicleService.getVehicleById(id);
+        model.addAttribute("vehicle", vehicle);
+        
+        Long userId = authService.getUserId(request);
+        UserInfo user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("User not found!");
+        }
+        model.addAttribute("user", user);
+    
         return "ADD_vehicle";
     }
+    
 
     @GetMapping("/delete/{id}")
     public String deleteVehicle(@PathVariable Long id, RedirectAttributes ra) {

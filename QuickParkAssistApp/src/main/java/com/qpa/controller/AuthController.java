@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qpa.entity.AuthUser;
+import com.qpa.exception.InvalidCredentialsException;
 import com.qpa.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,17 +50,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthUser request, HttpServletResponse response) {
-        try {
-            authService.loginUser(request, response);
-            return ResponseEntity.ok("Login successful! JWT is set in the cookie.");
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+        String result = authService.loginUser(request, response);
+        return ResponseEntity.ok(result);
+    
     }
 
     @GetMapping("/check")
     public ResponseEntity<Boolean> checkAuth(HttpServletRequest request) {
         boolean isAuthenticated = authService.isAuthenticated(request);
         return ResponseEntity.ok(isAuthenticated);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }

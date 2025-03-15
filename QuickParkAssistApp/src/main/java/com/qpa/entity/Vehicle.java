@@ -1,8 +1,7 @@
 package com.qpa.entity;
 
 import java.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,11 +45,12 @@ public class Vehicle {
     private String model;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate registrationDate;
+    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must be in yyyy-MM-dd format")
+    @Column(nullable = false)
+    private String registrationDate; // Now stored as String
 
     @Column(nullable = false)
-    private boolean isActive = true; // Default to active
+    private boolean isActive = true;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -102,12 +102,16 @@ public class Vehicle {
         this.model = model;
     }
 
-    public LocalDate getRegistrationDate() {
+    public String getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
+    public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public boolean isActive() {

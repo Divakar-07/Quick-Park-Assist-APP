@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,7 @@ import com.qpa.entity.UserInfo;
 import com.qpa.entity.Vehicle;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;
+import com.qpa.service.EmailService;
 import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
@@ -35,12 +37,14 @@ import jakarta.servlet.http.HttpSession;
 
 
 
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
     @Autowired private UserService userService;
     @Autowired private AuthService authService;
     @Autowired private VehicleService vehicleService;
+    @Autowired private EmailService emailService;
 
     
 
@@ -59,9 +63,10 @@ public class UserController {
             }
 
             UserInfo user = new UserInfo();
-
+            System.out.println(request.getUserType());
             user.setEmail(request.getEmail());
             user.setFullName(request.getFullName());
+            user.setUserType(request.getUserType());
             user = userService.addUser(user);
 
             AuthUser authUser = new AuthUser();
@@ -72,14 +77,31 @@ public class UserController {
             if (!authService.addAuth(authUser, response)){
                 return "error";
             }
+            System.out.println("the error is coming from the email service");
+            emailService.sendRegistrationEmail(request.getEmail(), request.getUsername());
 
             return "redirect:/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "register";
+            return "login";
         }
     }
     
+    @PutMapping("update/{id}")
+    public ResponseEntity<?> updateUserDetails(@PathVariable Long id, @RequestBody UserInfo user) {
+        try {
+            
+            if (id == null){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "please provide userId"));
+            }
+    
+            user.setUserId(id);
+            userService.updateUser(user);
+            return ResponseEntity.ok("user updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal server error unable to update user"));
+        }
+    }
 
     
     @PostMapping("/save")

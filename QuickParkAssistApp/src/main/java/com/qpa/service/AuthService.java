@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.qpa.entity.AuthUser;
+import com.qpa.exception.InvalidCredentialsException;
 import com.qpa.repository.AuthRepository;
 import com.qpa.security.JwtUtil;
 
@@ -28,10 +29,12 @@ public class AuthService {
 
     public boolean addAuth(AuthUser authUser, HttpServletResponse response){
         try {
+            String initPassword = authUser.getPassword();
             String password = passwordEncoder.encode(authUser.getPassword());
+            
             authUser.setPassword(password);
             authUser = authRepository.save(authUser);
-            loginUser(authUser, response);
+            loginUser(new AuthUser(authUser.getUsername(), initPassword), response);
             return true;
         } catch (Exception e) {
             System.out.println("error occured inside addAuth: " + e.getMessage());
@@ -51,24 +54,27 @@ public class AuthService {
     }
 
 
-      public void loginUser(AuthUser request, HttpServletResponse response) {
-        Optional<AuthUser> authUser = authRepository.findByUsername(request.getUsername());
-        try {
-            if (authUser.isEmpty() || !passwordEncoder.matches(request.getPassword(), authUser.get().getPassword())) {
-                throw new RuntimeException("Invalid username or password");
-            }
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        public String loginUser(AuthUser request, HttpServletResponse response) {
+        Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(request.getUsername());
+        if (optionalAuthUser.isEmpty()){
+            throw new InvalidCredentialsException("invalid username or password");
         }
+        AuthUser authUser = optionalAuthUser.get();
+        if (!passwordEncoder.matches(request.getPassword(), authUser.getPassword())) {
+                throw new InvalidCredentialsException("Invalid username or password");
+            }
 
-        String token = jwtUtil.generateToken(authUser.get().getUsername(), authUser.get().getUser().getUserId());
-        Cookie jwtCookie = new Cookie("jwt", token);
-        jwtCookie.setHttpOnly(true);  // Prevent JavaScript access
-        jwtCookie.setSecure(true);    // Send only over HTTPS (set to false for local testing)
-        jwtCookie.setPath("/");       // Available for all endpoints
-        jwtCookie.setMaxAge(60 * 60 * 24); // 1 day expiration
+            String token = jwtUtil.generateToken(authUser.getUsername(), authUser.getUser().getUserId());
+            Cookie jwtCookie = new Cookie("jwt", token);
+            jwtCookie.setHttpOnly(true);  // Prevent JavaScript access
+            jwtCookie.setSecure(true);    // Send only over HTTPS (set to false for local testing)
+            jwtCookie.setPath("/");       // Available for all endpoints
+            jwtCookie.setMaxAge(60 * 60 * 24); // 1 day expiration
+    
+            response.addCookie(jwtCookie);
 
-        response.addCookie(jwtCookie);
+            return "Login Successful";
+
     }
 
     

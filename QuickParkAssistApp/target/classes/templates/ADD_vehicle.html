@@ -120,12 +120,24 @@
           <!-- Left Sidebar (Profile & Options) -->
           <div class="col-md-3 sidebar">
             <div class="profile-section text-center">
-              <img
-                src="/images/anime-male-avatar_950633-896.avif"
-                alt="User Avatar"
-                class="profile-img"
-              />
-              <h4>Divakar Sharma</h4>
+              <div style="position: relative">
+                <img
+                  src="/images/user.jpg"
+                  alt="User Avatar"
+                  class="profile-img"
+                  id="profile-image-js"
+                />
+                <label for="file-input-js"
+                  ><img src="/images/pen.png" class="edit-icon" alt=""
+                /></label>
+                <input
+                  type="file"
+                  name="file"
+                  id="file-input-js"
+                  style="display: none"
+                />
+              </div>
+              <h4 id="username-dashboard-js"></h4>
             </div>
             <ul class="nav flex-column">
               <li class="nav-item">
@@ -153,26 +165,45 @@
 
           <!-- Right Content (Booking Details) -->
           <div class="col-md-9 main-content">
-            <div class="d-flex justify-content-center align-items-center vh-100">
-              <div class="bg-white p-4 rounded shadow w-100" style="max-width: 768px">
-                <h2 class="text-center text-dark fw-semibold mb-4" 
-                    th:text="${vehicle.vehicleId != null} ? 'Edit Vehicle' : 'Add New Vehicle'">
-                </h2>
-            
-                <form th:action="@{/vehicles/save}" th:object="${vehicle}" method="post">
+            <div
+              class="d-flex justify-content-center align-items-center vh-100"
+            >
+              <div
+                class="bg-white p-4 rounded shadow w-100"
+                style="max-width: 768px"
+              >
+                <h2
+                  class="text-center text-dark fw-semibold mb-4"
+                  th:text="${vehicle.vehicleId != null} ? 'Edit Vehicle' : 'Add New Vehicle'"
+                ></h2>
+
+                <form
+                  th:action="@{/vehicles/save}"
+                  th:object="${vehicle}"
+                  method="post"
+                >
                   <input type="hidden" th:field="*{vehicleId}" />
-            
+
                   <div class="row g-3">
                     <!-- Registration Number -->
                     <div class="col-md-6">
-                      <label class="form-label text-dark fw-medium">Registration Number</label>
-                      <input type="text" th:field="*{registrationNumber}" required 
-                             class="form-control" placeholder="e.g MH12AB1234" />
+                      <label class="form-label text-dark fw-medium"
+                        >Registration Number</label
+                      >
+                      <input
+                        type="text"
+                        th:field="*{registrationNumber}"
+                        required
+                        class="form-control"
+                        placeholder="e.g MH12AB1234"
+                      />
                     </div>
-            
+
                     <!-- Vehicle Type -->
                     <div class="col-md-6">
-                      <label class="form-label text-dark fw-medium">Vehicle Type</label>
+                      <label class="form-label text-dark fw-medium"
+                        >Vehicle Type</label
+                      >
                       <select th:field="*{vehicleType}" class="form-select">
                         <option value="CAR">Car</option>
                         <option value="BIKE">Bike</option>
@@ -180,55 +211,97 @@
                         <option value="OTHER">Other</option>
                       </select>
                     </div>
-            
+
                     <!-- Brand -->
                     <div class="col-md-6">
-                      <label class="form-label text-dark fw-medium">Brand</label>
-                      <input type="text" th:field="*{brand}" required 
-                             class="form-control" placeholder="e.g. Toyota, Honda" />
+                      <label class="form-label text-dark fw-medium"
+                        >Brand</label
+                      >
+                      <input
+                        type="text"
+                        th:field="*{brand}"
+                        required
+                        class="form-control"
+                        placeholder="e.g. Toyota, Honda"
+                      />
                     </div>
-            
+
                     <!-- Model -->
                     <div class="col-md-6">
-                      <label class="form-label text-dark fw-medium">Model</label>
-                      <input type="text" th:field="*{model}" required 
-                             class="form-control" placeholder="e.g. Fortuner, Civic" />
+                      <label class="form-label text-dark fw-medium"
+                        >Model</label
+                      >
+                      <input
+                        type="text"
+                        th:field="*{model}"
+                        required
+                        class="form-control"
+                        placeholder="e.g. Fortuner, Civic"
+                      />
                     </div>
-            
+
                     <!-- Registration Date -->
                     <div class="col-md-6">
-                      <label class="form-label text-dark fw-medium">Registration Date</label>
-                      <input type="date" th:field="*{registrationDate}" required 
-                             class="form-control" min="1900-01-01" max="2025-12-31" />
+                      <label class="form-label text-dark fw-medium"
+                        >Registration Date</label
+                      >
+                      <input
+                        type="date"
+                        th:value="${formattedRegistrationDate}"
+                        th:field="*{registrationDate}"
+                        required
+                        class="form-control"
+                        min="1900-01-01"
+                        max="2025-12-31"
+                      />
+                      <p th:text="${registrationDate}" style="color: black"></p>
                     </div>
-            
+
                     <!-- Active Status -->
                     <div class="col-md-6 d-flex align-items-center">
-                      <input type="checkbox" th:field="*{active}" class="form-check-input me-2" />
-                      <label class="form-check-label text-dark fw-medium">Active</label>
+                      <input
+                        type="checkbox"
+                        th:field="*{active}"
+                        class="form-check-input me-2"
+                      />
+                      <label class="form-check-label text-dark fw-medium"
+                        >Active</label
+                      >
                     </div>
-            
+
                     <!-- Owner (User) Selection -->
                     <div class="col-12">
-                      <label class="form-label text-dark fw-medium">Owner (User)</label>
+                      <label class="form-label text-dark fw-medium"
+                        >Owner (User)</label
+                      >
                       <div class="border p-2 rounded">
-                        <input type="hidden" th:field="*{userObj}" th:value="${user.userId}" />
-                        <input type="text" class="form-control" th:value="${user.fullName}" readonly />
+                        <input
+                          type="hidden"
+                          th:field="*{userObj}"
+                          th:value="${user.userId}"
+                        />
+                        <input
+                          type="text"
+                          class="form-control"
+                          th:value="${user.fullName}"
+                          readonly
+                        />
                       </div>
                     </div>
                   </div>
-            
+
                   <!-- Form Actions -->
                   <div class="d-flex justify-content-between mt-3">
                     <button type="submit" class="btn btn-primary">
-                      <span th:text="${vehicle.vehicleId != null} ? 'Update' : 'Create'"></span>
+                      <span
+                        th:text="${vehicle.vehicleId != null} ? 'Update' : 'Create'"
+                      ></span>
                     </button>
                     <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
                   </div>
                 </form>
               </div>
             </div>
-            
           </div>
         </div>
       </div>
