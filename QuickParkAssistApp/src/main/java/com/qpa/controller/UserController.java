@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.qpa.dto.RegisterDto;
 import com.qpa.entity.AuthUser;
@@ -25,10 +27,12 @@ import com.qpa.entity.UserInfo;
 import com.qpa.entity.Vehicle;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.service.AuthService;
+import com.qpa.service.CloudinaryService;
 import com.qpa.service.EmailService;
 import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
+import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -45,6 +49,7 @@ public class UserController {
     @Autowired private AuthService authService;
     @Autowired private VehicleService vehicleService;
     @Autowired private EmailService emailService;
+    @Autowired private CloudinaryService cloudinaryService;
 
     
 
@@ -52,6 +57,40 @@ public class UserController {
     public ResponseEntity<?> getUserProfile(HttpServletRequest request){
         Long userId = authService.getUserId(request);
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @PostMapping("/image/upload")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        try {
+            String imageUrl = cloudinaryService.uploadImage(file);
+            UserInfo user = userService.getUserById(authService.getUserId(request));
+
+            if (!"".equals(user.getImageUrl())){
+                if(!deleteImage(user.getImageUrl(), request)){
+                    return ResponseEntity.badRequest().body(Map.of("error", "error while deleting image"));
+                }
+            }
+            user.setImageUrl(imageUrl);
+            userService.updateUser(user);
+
+            return ResponseEntity.ok("image uploaded successfully");
+        } catch (java.io.IOException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Image upload failed: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/image/delete")
+    public boolean deleteImage(String imageUrl, HttpServletRequest request) {
+        try {
+            cloudinaryService.deleteImage(imageUrl);
+            UserInfo user = userService.getUserById(authService.getUserId(request));
+            user.setImageUrl("");
+            userService.updateUser(user);
+            System.out.println("Image deleted successfully");
+            return true;
+        } catch (java.io.IOException e) {
+            return false;
+        }
     }
 
     @PostMapping("/register")

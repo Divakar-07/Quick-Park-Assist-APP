@@ -57,6 +57,9 @@ public class UserInfo {
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE; // Default status, but can be null in DB
 
+    @Column(nullable = true)
+    private String imageUrl; // Optional, can be null
+
     // Default constructor
     public UserInfo() {
     }
@@ -142,6 +145,14 @@ public class UserInfo {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getFormattedDateOfRegister() {

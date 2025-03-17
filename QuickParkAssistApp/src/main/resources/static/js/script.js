@@ -1,4 +1,6 @@
 const logoutBtn = document.getElementById("logout");
+const fileInput = document.getElementById("file-input-js");
+const profileImage = document.getElementById("profile-image-js");
 
 logoutBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -38,6 +40,7 @@ window.onload = async () => {
       console.log(userProfile);
       document.getElementById("username-dashboard-js").innerText =
         userProfile.fullName;
+      if (userProfile.imageUrl) profileImage.src = userProfile.imageUrl;
     } else {
       console.error("Failed to fetch user profile");
     }
@@ -46,12 +49,31 @@ window.onload = async () => {
   }
 };
 
-const fileInput = document.getElementById("file-input-js");
-const profileImage = document.getElementById("profile-image-js");
-fileInput.onchange = (e) => {
+fileInput.onchange = async (e) => {
   const file = e.target.files[0];
   if (file) {
     const imageUrl = URL.createObjectURL(file);
     profileImage.src = imageUrl;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/users/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        toast.error("Failed to upload image");
+      } else {
+        toast.success("Image uploaded successfully");
+      }
+
+      console.log("Image uploaded successfully:", response);
+    } catch (error) {
+      toast.error("Error uploading image ", error);
+      console.error("Error uploading image:", error);
+    }
   }
 };

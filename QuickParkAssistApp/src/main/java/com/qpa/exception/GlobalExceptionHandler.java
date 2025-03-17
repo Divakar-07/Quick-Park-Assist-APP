@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,5 +40,12 @@ public class GlobalExceptionHandler {
     public String handleGeneralExceptions(Exception ex, Model model, RedirectAttributes ra) {
         ra.addFlashAttribute("error", "An unexpected error occurred: " + ex.getMessage());
         return "redirect:/error"; // Redirects to an error page
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        return ResponseEntity
+                .status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body("File size exceeds the maximum allowed limit. Please upload a smaller file.");
     }
 }

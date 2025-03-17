@@ -217,7 +217,7 @@ const handleFormSubmit = async (e) => {
     });
 
     if (response.ok) {
-      alert("User details updated successfully!");
+      toast.success("Profile updated successfully");
       toggleShowEdit();
     } else {
       alert("Failed to update user details.");

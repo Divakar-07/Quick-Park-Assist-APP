@@ -123,13 +123,14 @@ loginForm.addEventListener("submit", (e) => {
     .then((response) => {
       console.log(response);
       if (response.ok) {
+        toast.success("login successful");
         window.location.href = "/dashboard";
       } else {
-        alert("Invalid credentials");
+        toast.error("Invalid credentials ", response.text);
       }
     })
     .catch((error) => {
-      alert("invalid credentials" + error);
+      toast.error("Invalid credentials");
     });
 });
 // Function to handle user type selection

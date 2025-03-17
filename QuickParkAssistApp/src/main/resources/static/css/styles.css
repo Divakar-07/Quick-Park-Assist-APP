@@ -375,3 +375,15 @@ body {
     color: #e4405f !important;
 }
 
+.success-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}
+.error-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}
+.notify-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}
