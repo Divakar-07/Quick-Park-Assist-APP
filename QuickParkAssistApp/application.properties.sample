@@ -1,0 +1,45 @@
+spring.application.name=QuickParkAssistApp
+server.port = 5000
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/qpa_db?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=iwant50$
+
+# Hibernate Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.enabled=true
+
+# Disable cache for development
+spring.thymeleaf.cache=false 
+
+# Enable component scanning
+spring.main.allow-bean-definition-overriding=true
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+
+# please add your email there
+spring.mail.username=your@email.com
+
+#please add your app password here from google by making one from https://myaccount.google.com/u/1/apppasswords
+spring.mail.password=password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+#please add your cloudinary configuration here
+cloudinary.cloud-name=cloudinary.cloud-name
+cloudinary.api-key=cloudinary.api-key
+cloudinary.api-secret==cloudinary.api-secret
+
+
+
+# Increase file upload size limits
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
