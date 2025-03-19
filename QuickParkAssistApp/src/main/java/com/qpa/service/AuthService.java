@@ -2,9 +2,12 @@ package  com.qpa.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.qpa.dto.ResponseDTO;
 import com.qpa.entity.AuthUser;
 import com.qpa.exception.InvalidCredentialsException;
 import com.qpa.repository.AuthRepository;
@@ -21,6 +24,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
 
+    @Value("${admin.username}")
+    private String adminUsername;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+   
     public AuthService(JwtUtil jwtUtil, AuthRepository authRepository, PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -45,36 +54,44 @@ public class AuthService {
     public boolean isAuthenticated(HttpServletRequest request) {
         try {
             String token = jwtUtil.extractTokenFromCookie(request);
+            System.out.println("token: " + token);
             if (token == null) return false;
             String username = jwtUtil.extractUsername(token);
             return jwtUtil.validateToken(token, username);
         } catch (Exception e) {
+            System.out.println("an error occured inside the isAuthenticated method " + e.getMessage());
             return false;
         }
     }
 
-
-        public String loginUser(AuthUser request, HttpServletResponse response) {
+    public ResponseDTO loginUser(AuthUser request, HttpServletResponse response) {
         Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(request.getUsername());
-        if (optionalAuthUser.isEmpty()){
-            throw new InvalidCredentialsException("invalid username or password");
+        if (optionalAuthUser.isEmpty()) {
+            throw new InvalidCredentialsException("Invalid username or password");
         }
         AuthUser authUser = optionalAuthUser.get();
         if (!passwordEncoder.matches(request.getPassword(), authUser.getPassword())) {
-                throw new InvalidCredentialsException("Invalid username or password");
-            }
+            throw new InvalidCredentialsException("Invalid username or password");
+        }
 
-            String token = jwtUtil.generateToken(authUser.getUsername(), authUser.getUser().getUserId());
-            Cookie jwtCookie = new Cookie("jwt", token);
-            jwtCookie.setHttpOnly(true);  // Prevent JavaScript access
-            jwtCookie.setSecure(true);    // Send only over HTTPS (set to false for local testing)
-            jwtCookie.setPath("/");       // Available for all endpoints
-            jwtCookie.setMaxAge(60 * 60 * 24); // 1 day expiration
+        // Generate JWT token
+        String token = jwtUtil.generateToken(authUser.getUsername(), authUser.getUser().getUserId());
+
+        // Create and set the cookie properly
+        Cookie jwtCookie = new Cookie("jwt", token);
+        jwtCookie.setPath("/");           // Makes it available for all paths
+        jwtCookie.setHttpOnly(true);      // Prevents access via JavaScript
+        jwtCookie.setMaxAge(86400);       // 1 day expiration
+        jwtCookie.setSecure(false);       // Set to true if using HTTPS
+        jwtCookie.setAttribute("SameSite", "None"); // Ensures compatibility
+
+        response.addCookie(jwtCookie); // Add cookie to response
+
     
-            response.addCookie(jwtCookie);
+    response.addHeader("Set-Cookie", jwtCookie.toString());
 
-            return "Login Successful";
 
+        return new ResponseDTO("Login Successful", HttpStatus.OK, true);
     }
 
     
@@ -100,7 +117,7 @@ public class AuthService {
         Optional<AuthUser> authUser = authRepository.findByUser_UserId(getUserId(request));
 
         if (authUser == null){
-            throw new RuntimeException("unauthorized request");
+            return null;
         }
         return authUser.get();
     }
@@ -116,4 +133,64 @@ public class AuthService {
             System.out.println(e.getMessage());
         }
     }
+
+    public boolean checkAdmin(HttpServletRequest request) {
+        try {
+            // Extract token from cookies
+            String token = jwtUtil.extractTokenFromCookie(request);
+            if (token == null) return false;
+    
+            // Extract username from token
+            String username = jwtUtil.extractUsername(token);
+    
+            // Validate token
+            if (!jwtUtil.validateToken(token, username)) return false;
+    
+            // Fetch user from database
+            Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(username);
+            if (optionalAuthUser.isEmpty()) return false;
+    
+            // Check if the user has an admin role
+            AuthUser authUser = optionalAuthUser.get();
+            return authUser.getUser().getUserType().toString().equalsIgnoreCase("ADMIN");
+        } catch (Exception e) {
+            System.out.println("Error in checkAdmin: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public ResponseDTO loginAdmin(AuthUser request, HttpServletResponse response) {
+        Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(request.getUsername());
+        if (optionalAuthUser.isEmpty()) {
+            throw new InvalidCredentialsException("Invalid username or password");
+        }
+        AuthUser authUser = optionalAuthUser.get();
+        
+        // Verify password
+        if (!passwordEncoder.matches(request.getPassword(), authUser.getPassword())) {
+            throw new InvalidCredentialsException("Invalid username or password");
+        }
+    
+        // Check if the user has an admin role
+        if (!authUser.getUser().getUserType().toString().equalsIgnoreCase("ADMIN")) {
+            throw new InvalidCredentialsException("User is not an admin");
+        }
+    
+        // Generate JWT token
+        String token = jwtUtil.generateToken(authUser.getUsername(), authUser.getUser().getUserId());
+    
+        // Create and set the cookie properly
+        Cookie jwtCookie = new Cookie("jwt", token);
+        jwtCookie.setPath("/");
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setMaxAge(86400);
+        jwtCookie.setSecure(false);
+        jwtCookie.setAttribute("SameSite", "None");
+    
+        response.addCookie(jwtCookie);
+        response.addHeader("Set-Cookie", jwtCookie.toString());
+    
+        return new ResponseDTO("Admin Login Successful", HttpStatus.OK, true);
+    }
+    
 }

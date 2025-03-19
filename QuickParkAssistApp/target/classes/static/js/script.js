@@ -4,7 +4,7 @@ const profileImage = document.getElementById("profile-image-js");
 
 logoutBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  fetch("/auth/logout", {
+  fetch("/api/auth/logout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
