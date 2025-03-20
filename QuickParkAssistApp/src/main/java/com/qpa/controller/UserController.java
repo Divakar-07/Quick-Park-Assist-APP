@@ -1,12 +1,6 @@
 package com.qpa.controller;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +19,10 @@ import com.qpa.dto.ResponseDTO;
 import com.qpa.entity.AuthUser;
 import com.qpa.entity.UserInfo;
 import com.qpa.entity.UserType;
-import com.qpa.entity.Vehicle;
 import com.qpa.service.AuthService;
 import com.qpa.service.CloudinaryService;
 import com.qpa.service.EmailService;
 import com.qpa.service.UserService;
-import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
