@@ -74,8 +74,6 @@ class Toast {
   }
   
   // Create an instance
-  const toast = new Toast();
+  export default new Toast();
   
-  // Make it globally accessible
-  window.toast = toast;
   

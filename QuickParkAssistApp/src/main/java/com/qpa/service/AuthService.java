@@ -1,9 +1,12 @@
 package  com.qpa.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +39,20 @@ public class AuthService {
         this.authRepository = authRepository;
     }
 
+    public AuthUser getAuthByUsername(String username){
+        try {
+            return authRepository.findFreshByUsername(username).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
+
     public boolean addAuth(AuthUser authUser, HttpServletResponse response){
         try {
-            String initPassword = authUser.getPassword();
             String password = passwordEncoder.encode(authUser.getPassword());
             
             authUser.setPassword(password);
-            authUser = authRepository.save(authUser);
-            loginUser(new AuthUser(authUser.getUsername(), initPassword), response);
+            authRepository.save(authUser);
             return true;
         } catch (Exception e) {
             System.out.println("error occured inside addAuth: " + e.getMessage());
@@ -54,7 +63,6 @@ public class AuthService {
     public boolean isAuthenticated(HttpServletRequest request) {
         try {
             String token = jwtUtil.extractTokenFromCookie(request);
-            System.out.println("token: " + token);
             if (token == null) return false;
             String username = jwtUtil.extractUsername(token);
             return jwtUtil.validateToken(token, username);
@@ -64,7 +72,9 @@ public class AuthService {
         }
     }
 
-    public ResponseDTO loginUser(AuthUser request, HttpServletResponse response) {
+    public ResponseDTO<Void> loginUser(AuthUser request, HttpServletResponse response) {
+        System.out.println("iside the login user");
+
         Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(request.getUsername());
         if (optionalAuthUser.isEmpty()) {
             throw new InvalidCredentialsException("Invalid username or password");
@@ -78,35 +88,22 @@ public class AuthService {
         String token = jwtUtil.generateToken(authUser.getUsername(), authUser.getUser().getUserId());
 
         // Create and set the cookie properly
-        Cookie jwtCookie = new Cookie("jwt", token);
-        jwtCookie.setPath("/");           // Makes it available for all paths
-        jwtCookie.setHttpOnly(true);      // Prevents access via JavaScript
-        jwtCookie.setMaxAge(86400);       // 1 day expiration
-        jwtCookie.setSecure(false);       // Set to true if using HTTPS
-        jwtCookie.setAttribute("SameSite", "None"); // Ensures compatibility
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+            .httpOnly(true)  // Prevent JS access
+            .secure(false)   // Set true if using HTTPS
+            .path("/")       // Cookie available on all paths
+            .sameSite("None") // 🔥 Needed for cross-origin requests
+            .secure(false)
+            .build();
 
-        response.addCookie(jwtCookie); // Add cookie to response
+        response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString()); // Add cookie to response
 
-    
-    response.addHeader("Set-Cookie", jwtCookie.toString());
-
-
-        return new ResponseDTO("Login Successful", HttpStatus.OK, true);
+                return new ResponseDTO<>("Login Successful", HttpStatus.OK.value(), true);
     }
 
     
-    public String logoutUser(HttpServletResponse response){
-        try {
-            if (jwtUtil.clearCookies(response)){
-                return "Logged out successfully!";
-            }
-            else{
-                return "Logout unsuccessful";
-            }
-
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+    public boolean logoutUser(HttpServletResponse response){
+        return jwtUtil.clearCookies(response);
     }
 
     public Long getUserId(HttpServletRequest request){
@@ -159,7 +156,7 @@ public class AuthService {
         }
     }
 
-    public ResponseDTO loginAdmin(AuthUser request, HttpServletResponse response) {
+    public ResponseDTO<Void> loginAdmin(AuthUser request, HttpServletResponse response) {
         Optional<AuthUser> optionalAuthUser = authRepository.findFreshByUsername(request.getUsername());
         if (optionalAuthUser.isEmpty()) {
             throw new InvalidCredentialsException("Invalid username or password");
@@ -190,7 +187,7 @@ public class AuthService {
         response.addCookie(jwtCookie);
         response.addHeader("Set-Cookie", jwtCookie.toString());
     
-        return new ResponseDTO("Admin Login Successful", HttpStatus.OK, true);
+        return new ResponseDTO<> ("Admin Login Successful", HttpStatus.OK.value(), true);
     }
     
 }

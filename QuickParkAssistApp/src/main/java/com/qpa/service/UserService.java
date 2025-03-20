@@ -37,40 +37,20 @@ public class UserService {
     public void deleteUser(Long id, HttpServletResponse response) {
         UserInfo user = userRepository.findById(id)
                 .orElseThrow(() -> new InvalidEntityException("User not found with ID: " + id));
-    
         try {
             authService.deleteAuth(id, response);
-            System.out.println("deleted the Authuser");
             userRepository.delete(user);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new InvalidEntityException("Cannot delete user. Related entities exist.");
         }
     }
 
-        
-
     public UserInfo viewUserByVehicleId(Long vehicleId){
-        try {
-
-            Vehicle vehicle = vehicleService.getVehicleById(vehicleId);
-            if (vehicle != null){
-                return vehicle.getUserObj();
-            }
-            return null;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        return vehicleService.getVehicleById(vehicleId).getUserObj();
     }
 
     public UserInfo findByBookingId(Long bookingId){
-        
-        
         Vehicle vehicle = vehicleService.findByBookingId(bookingId);
-
-        if (vehicle == null) {
-            return null; // No vehicle found
-        }
-
         return viewUserByVehicleId(vehicle.getVehicleId());
     }
 

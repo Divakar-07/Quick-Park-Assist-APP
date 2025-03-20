@@ -1,6 +1,7 @@
 package com.qpa.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.qpa.entity.SpotBookingInfo;
 import com.qpa.entity.UserInfo;
 import com.qpa.entity.Vehicle;
+import com.qpa.entity.VehicleType;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.repository.SpotBookingInfoRepository;
 import com.qpa.repository.UserRepository;
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class VehicleService {
+
     
     @Autowired 
     private VehicleRepository vehicleRepository;
@@ -32,8 +35,10 @@ public class VehicleService {
     @Autowired 
     private UserRepository userRepository;
 
+
+
     // Add a new vehicle
-    public Vehicle addVehicle(Vehicle vehicle, HttpServletRequest request) { 
+    public Vehicle addVehicle(Vehicle vehicle, HttpServletRequest request) {
         String token = jwtUtil.extractTokenFromCookie(request);
     
         if (token == null) {
@@ -45,16 +50,18 @@ public class VehicleService {
         if (userId == null) {
             throw new RuntimeException("Invalid token: User ID not found");
         }
+
+        Optional<Vehicle> existingVehicle = vehicleRepository.findByRegistrationNumber(vehicle.getRegistrationNumber());
+
+        if (existingVehicle.isPresent()) {
+            throw new InvalidEntityException("Vehicle with registration number " + vehicle.getRegistrationNumber() + " already exists");
+        }
     
         Optional<UserInfo> userObj = userRepository.findById(userId);
-        
-        if (userObj.isPresent()) {
             UserInfo user = userObj.get();
             vehicle.setUserObj(user);
-            return vehicleRepository.save(vehicle); 
-        } else {
-            throw new RuntimeException("User not found with ID: " + userId);
-        }
+            return vehicleRepository.save(vehicle);
+
     }
     
 
@@ -65,7 +72,7 @@ public class VehicleService {
     }
 
     // Get vehicles by type
-    public List<Vehicle> getVehiclesByType(String type) { 
+    public List<Vehicle> getVehiclesByType(VehicleType type) { 
         List<Vehicle> vehicles = vehicleRepository.findByVehicleType(type);
         if (vehicles.isEmpty()) {
             throw new InvalidEntityException("No vehicles found for type: " + type);
@@ -90,8 +97,18 @@ public class VehicleService {
     }
 
     public Vehicle findByBookingId(Long bookingId){
-        Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
-        return bookingInfo.get().getVehicle();
+        try {
+            Optional<SpotBookingInfo> bookingInfo = spotBookingInfoRepository.findById(bookingId);
+            return bookingInfo.get().getVehicle();
+            
+        } catch (NoSuchElementException e) {
+            System.out.println("NoSuchElementException inside the findVehicleByBookingId: " + e.getMessage());
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("Exception occured inside the findVehicleByBookingId: " + e.getMessage());
+            return null;
+        }
     }
 
     public List<Vehicle> findByUserId(Long userId){

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMART PARK</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon_io/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon_io/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon_io/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/favicon_io/site.webmanifest" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <div class="container" id="container">
+      <div class="form">
+        <!-- Sign In Form -->
+        <div class="form-section signin">
+          <form id="login-form">
+            <h2>Welcome Back!</h2>
+            <div class="input-group">
+              <input type="text" required id="login-username" />
+              <label>username</label>
+            </div>
+            <div class="input-group">
+              <input type="password" id="login-password" required />
+              <label>Password</label>
+            </div>
+            <button type="submit">Sign In</button>
+            <p>Or sign in with</p>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-google"></i></a>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="text-light fs-4"
+                ><i class="bi bi-twitter-x"></i
+              ></a>
+            </div>
+            <div class="mobile-toggle" style="display: none">
+              <p>
+                Don't have an account?
+                <span onclick="handleScreenToggle()">Sign Up</span>
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="form-section signup">
+          <form id="signup-form">
+            <h2>Create Account</h2>
+
+            <div class="input-group" style="display: none">
+              <input type="text" id="signup-userType" />
+            </div>
+
+            <div class="input-group">
+              <input type="text" required id="signup-fullname" />
+              <label>Full Name</label>
+            </div>
+            <div class="input-group">
+              <input type="email" required id="signup-email" />
+              <label>Email</label>
+            </div>
+
+            <div class="input-group">
+              <input type="text" required id="signup-username" />
+              <label>username</label>
+            </div>
+
+            <div class="input-group">
+              <input type="password" required id="signup-password1" />
+              <label>Password</label>
+            </div>
+
+            <div class="input-group">
+              <input type="password" required id="signup-password2" />
+              <label>confirm Password</label>
+            </div>
+
+            <div class="mobile-toggle" style="display: none">
+              <!-- User Type Selection -->
+              <div
+                class="user-type-selection d-flex gap-2"
+                style="flex-direction: row"
+              >
+                <button
+                  type="button"
+                  class="user-type-btn"
+                  onclick="selectUserType('SLOT_OWNER')"
+                  data-type="SLOT_OWNER"
+                  style="color: black; border: 2px solid black"
+                >
+                  Sign Up as Slot Owner
+                </button>
+                <button
+                  style="color: black; border: 2px solid black"
+                  type="button"
+                  class="user-type-btn"
+                  data-type="VEHICLE_OWNER"
+                  onclick="selectUserType('VEHICLE_OWNER')"
+                >
+                  Sign Up as Vehicle Owner
+                </button>
+              </div>
+
+              <p>
+                Already have an account?
+                <span onclick="handleScreenToggle()">Sign In</span>
+              </p>
+            </div>
+            <button type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Overlay Container -->
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-section overlay-left">
+            <h2>Hello, Friend!</h2>
+            <p>Enter your personal details and start your journey with us</p>
+
+            <!-- User Type Selection -->
+            <div class="user-type-selection">
+              <button
+                class="user-type-btn"
+                data-type="SLOT_OWNER"
+                onclick="selectUserType('SLOT_OWNER')"
+              >
+                Sign Up as Slot Owner
+              </button>
+              <button
+                class="user-type-btn"
+                data-type="VEHICLE_OWNER"
+                onclick="selectUserType('VEHICLE_OWNER')"
+              >
+                Sign Up as Vehicle Owner
+              </button>
+            </div>
+
+            <button onclick="handleScreenToggle()">Sign IN</button>
+          </div>
+
+          <div class="overlay-section overlay-right">
+            <h2>Welcome Back!</h2>
+            <p>
+              To keep connected with us please login with your personal info
+            </p>
+            <button onclick="handleScreenToggle()">Sign UP</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script th:src="@{/js/Toast.js}" type="module"></script>
+    <script th:src="@{/js/login/loginScript.js}" defer type="module"></script>
+    <script th:src="@{/js/login/formState.js}" defer></script>
+  </body>
+</html>

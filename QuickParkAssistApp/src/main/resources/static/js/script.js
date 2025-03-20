@@ -1,29 +1,25 @@
+import toast from "./Toast.js";
+import axios from 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
+
 const logoutBtn = document.getElementById("logout");
 const fileInput = document.getElementById("file-input-js");
 const profileImage = document.getElementById("profile-image-js");
 
-logoutBtn.addEventListener("click", (e) => {
+logoutBtn.addEventListener("click", async (e) => {
   e.preventDefault();
-  fetch("/api/auth/logout", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
-  })
-    .then((response) => {
-      window.location.href = "/login";
-    })
-    .catch((error) => {
-      alert("Logout failed");
-      console.error(error);
-    });
+  try {
+    await axios.post("/api/auth/logout");
+    window.location.href = "/login";
+  } catch (error) {
+    alert("Logout failed");
+    console.error(error);
+  }
 });
 
 function scrollToSlide(slideIndex) {
   const testimonialScroll = document.querySelector(".testimonial-scroll");
   const slideWidth = document.querySelector(".testimonial-slide").clientWidth;
-  testimonialScroll.style.transform = `translateX(-${
-    slideWidth * slideIndex
-  }px)`;
+  testimonialScroll.style.transform = `translateX(-${slideWidth * slideIndex}px)`;
 
   // Update indicators
   const dots = document.querySelectorAll(".dot");
@@ -34,16 +30,11 @@ function scrollToSlide(slideIndex) {
 
 window.onload = async () => {
   try {
-    const response = await fetch("/users/", { method: "GET" });
-    if (response.ok) {
-      const userProfile = await response.json();
-      console.log(userProfile);
-      document.getElementById("username-dashboard-js").innerText =
-        userProfile.fullName;
-      if (userProfile.imageUrl) profileImage.src = userProfile.imageUrl;
-    } else {
-      console.error("Failed to fetch user profile");
-    }
+    const response = await axios.get("/api/users/");
+    const userProfile = response.data;
+    console.log(userProfile);
+    document.getElementById("username-dashboard-js").innerText = userProfile.fullName;
+    if (userProfile.imageUrl) profileImage.src = userProfile.imageUrl;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
@@ -59,20 +50,11 @@ fileInput.onchange = async (e) => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("/users/image/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        toast.error("Failed to upload image");
-      } else {
-        toast.success("Image uploaded successfully");
-      }
-
+      const response = await axios.post("/api/users/image/upload", formData);
+      toast.success("Image uploaded successfully");
       console.log("Image uploaded successfully:", response);
     } catch (error) {
-      toast.error("Error uploading image ", error);
+      toast.error("Error uploading image");
       console.error("Error uploading image:", error);
     }
   }

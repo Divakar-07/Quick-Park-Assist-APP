@@ -1,18 +1,36 @@
 package com.qpa.dto;
 
-import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ResponseDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL) // Exclude null values from JSON response
+public class ResponseDTO<T> { // ✅ Define T at class level
+
+    @JsonProperty("message") // Ensures correct field mapping in JSON
     private String message;
-    private HttpStatus status;
+
+    @JsonProperty("status")
+    private int status;
+
+    @JsonProperty("success")
     private boolean success;
 
-    public ResponseDTO(String message, HttpStatus status, boolean success ) {
+    @JsonProperty("data")
+    private T data; // ✅ Now T is properly recognized
+
+    // Constructors
+    public ResponseDTO(String message, int status, boolean success, T data) {
         this.message = message;
         this.status = status;
         this.success = success;
+        this.data = data;
     }
 
+    public ResponseDTO(String message, int status, boolean success) {
+        this(message, status, success, null);
+    }
+
+    // Getters and Setters
     public String getMessage() {
         return message;
     }
@@ -21,11 +39,11 @@ public class ResponseDTO {
         this.message = message;
     }
 
-    public HttpStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(HttpStatus status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -37,4 +55,11 @@ public class ResponseDTO {
         this.success = success;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

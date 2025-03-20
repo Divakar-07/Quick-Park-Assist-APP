@@ -1,51 +1,73 @@
 package com.qpa.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import com.qpa.dto.ResponseDTO;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     // Handle validation errors for input fields
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ResponseDTO<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-
         ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseDTO<>("Validation failed", 400, false, errors));
     }
-
     // Handle cases where a requested entity (User/Vehicle) is not found
     @ExceptionHandler(InvalidEntityException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidEntityException(InvalidEntityException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseDTO<Void>> handleInvalidEntityException(InvalidEntityException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ResponseDTO<>(ex.getMessage(), 404, false));
     }
-
-    // Handle general exceptions (for UI-based requests)
-    @ExceptionHandler(Exception.class)
-    public String handleGeneralExceptions(Exception ex, Model model, RedirectAttributes ra) {
-        ra.addFlashAttribute("error", "An unexpected error occurred: " + ex.getMessage());
-        return "redirect:/error"; // Redirects to an error page
-    }
-
+    // Handle file upload size exceeding limit
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException ex) {
-        return ResponseEntity
-                .status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body("File size exceeds the maximum allowed limit. Please upload a smaller file.");
+    public ResponseEntity<ResponseDTO<Void>> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(new ResponseDTO<>("File size exceeds the maximum allowed limit. Please upload a smaller file.", 413, false));
     }
+    // Handle SQL exceptions (like duplicate entry errors)
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ResponseDTO<Void>> handleSQLIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ResponseDTO<>("Duplicate entry or constraint violation", 409, false));
+    }
+
+    // Handle all other unhandled exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDTO<Void>> handleGeneralException(Exception ex) {
+        System.out.println(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ResponseDTO<>("An unexpected error occurred", 500, false));
+    }
+
+    @ExceptionHandler(InvalidVehicleTypeException.class)
+    public ResponseEntity<ResponseDTO<Void>> handleInvalidVehicleType(InvalidVehicleTypeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseDTO<>(ex.getMessage(), 400, false));
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ResponseDTO<Void>> handleUnauthorizedAccess(UnauthorizedAccessException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ResponseDTO<>(ex.getMessage(), 401, false));
+    }
+    
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ResponseDTO<Void>> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ResponseDTO<>(ex.getMessage(), HttpStatus.UNAUTHORIZED.value(), false));
+    }
+
 }

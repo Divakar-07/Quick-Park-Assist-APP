@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 @Configuration
 public class CorsConfig {
     @Bean
@@ -12,11 +11,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5001") // Your frontend URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowCredentials(true) // Allow cookies
-                        .allowedHeaders("*");
+                registry.addMapping("/api/**")  // 🔥 Allow all API routes
+                        .allowedOrigins("http://localhost:5001")  // 🔥 Allow frontend
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // 🔥 Allow these HTTP methods
+                        .allowedHeaders("*")  // 🔥 Allow all headers
+                        .allowCredentials(true);  // 🔥 Allow cookies/session data
             }
         };
     }
