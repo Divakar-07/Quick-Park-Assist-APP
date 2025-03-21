@@ -9,18 +9,31 @@ import org.springframework.context.annotation.Configuration;
 
 import com.cloudinary.Cloudinary;
 
+/**
+ * Configuration class for Cloudinary setup.
+ * This class initializes the Cloudinary service with the necessary credentials.
+ */
 @Configuration
 public class CloudinaryConfig {
 
+    // Cloudinary cloud name retrieved from application properties
     @Value("${cloudinary.cloud-name}")
     private String cloudName;
 
+    // Cloudinary API key retrieved from application properties
     @Value("${cloudinary.api-key}")
     private String apiKey;
 
+    // Cloudinary API secret retrieved from application properties
     @Value("${cloudinary.api-secret}")
     private String apiSecret;
 
+    /**
+     * Bean definition for Cloudinary instance.
+     * Initializes Cloudinary with the configured credentials.
+     * 
+     * @return Configured Cloudinary instance.
+     */
     @Bean
     public Cloudinary cloudinary() {
         Map<String, String> config = new HashMap<>();

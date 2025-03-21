@@ -26,6 +26,13 @@ public class VehicleController {
     @Autowired private VehicleService vehicleService;
     @Autowired private AuthService authService;
 
+    /**
+     * Saves a new vehicle or updates an existing one.
+     * 
+     * @param vehicle The vehicle object to be saved.
+     * @param request The HTTP request object.
+     * @return Response indicating success or failure.
+     */
     @PostMapping("/save")
     public ResponseEntity<ResponseDTO<Void>> saveVehicle(@RequestBody Vehicle vehicle, HttpServletRequest request) {
         try {
@@ -50,12 +57,20 @@ public class VehicleController {
         }
     }
 
+    /**
+     * Deletes a vehicle by its ID.
+     * 
+     * @param id The ID of the vehicle to be deleted.
+     * @param request The HTTP request object.
+     * @return Response indicating success or failure.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseDTO<Void>> deleteVehicle(@PathVariable Long id, HttpServletRequest request) {
         try {
             Long userId = authService.getUserId(request);
             Vehicle vehicle = vehicleService.getVehicleById(id);
 
+            // Check if the user is authorized to delete the vehicle
             if (!userId.equals(vehicle.getUserObj().getUserId())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new ResponseDTO<>("Unauthorized: You do not have permission to delete this vehicle.", 401, false, null));
@@ -73,6 +88,12 @@ public class VehicleController {
         }
     }
 
+    /**
+     * Retrieves a vehicle by its ID.
+     * 
+     * @param id The ID of the vehicle.
+     * @return Response containing the requested vehicle.
+     */
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<ResponseDTO<Vehicle>> viewVehicleById(@PathVariable Long id) {
@@ -80,6 +101,12 @@ public class VehicleController {
         return ResponseEntity.ok(new ResponseDTO<>("Vehicle fetched successfully", 200, true, vehicle));
     }
 
+    /**
+     * Retrieves all vehicles of a specific type.
+     * 
+     * @param vehicleType The type of vehicle to filter by.
+     * @return Response containing a list of vehicles of the specified type.
+     */
     @GetMapping("/type/{vehicleType}")
     @ResponseBody
     public ResponseEntity<ResponseDTO<List<Vehicle>>> viewVehiclesByType(@PathVariable String vehicleType) {
@@ -97,8 +124,16 @@ public class VehicleController {
         }
     }
 
+    /**
+     * Retrieves a vehicle associated with a specific booking ID.
+     * 
+     * @param bookingId The booking ID.
+     * @param request The HTTP request object.
+     * @return Response containing the vehicle details.
+     */
     @GetMapping("/booking/{bookingId}")
     public ResponseEntity<ResponseDTO<Vehicle>> getVehicleByBookingId(@PathVariable Long bookingId, HttpServletRequest request) {
+        // Ensure the user is authenticated before proceeding
         if (!authService.isAuthenticated(request)) {
             throw new UnauthorizedAccessException("Please login to place the request");
         }
@@ -106,6 +141,12 @@ public class VehicleController {
         return ResponseEntity.ok(new ResponseDTO<>("Vehicles fetched successfully", 200, true, vehicle));
     }
 
+    /**
+     * Retrieves all vehicles associated with the authenticated user.
+     * 
+     * @param request The HTTP request object.
+     * @return Response containing the list of vehicles owned by the user.
+     */
     @GetMapping("/user")
     public ResponseEntity<ResponseDTO<List<Vehicle>>> getUserVehicle(HttpServletRequest request) {
         List<Vehicle> vehicles = vehicleService.findByUserId(authService.getUserId(request));
