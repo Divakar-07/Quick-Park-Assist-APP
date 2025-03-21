@@ -81,11 +81,11 @@ public class AuthService {
 
         // Create and set the cookie properly
         ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
-            .httpOnly(true)  // Prevent JS access
+            .httpOnly(false)  // Prevent JS access
             .secure(false)   // Set true if using HTTPS
             .path("/")       // Cookie available on all paths
             .sameSite("None") // 🔥 Needed for cross-origin requests
-            .secure(false)
+            .secure(true)
             .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString()); // Add cookie to response

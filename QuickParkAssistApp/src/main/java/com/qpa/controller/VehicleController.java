@@ -6,18 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.qpa.dto.ResponseDTO;
-import com.qpa.entity.UserInfo;
 import com.qpa.entity.Vehicle;
 import com.qpa.entity.VehicleType;
 import com.qpa.exception.InvalidEntityException;
 import com.qpa.exception.InvalidVehicleTypeException;
 import com.qpa.exception.UnauthorizedAccessException;
 import com.qpa.service.AuthService;
-import com.qpa.service.UserService;
 import com.qpa.service.VehicleService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,39 +24,17 @@ import jakarta.servlet.http.HttpServletRequest;
 public class VehicleController {
 
     @Autowired private VehicleService vehicleService;
-    @Autowired private UserService userService;
     @Autowired private AuthService authService;
 
-    @GetMapping("/new")
-    public String showAddForm(Model model, HttpServletRequest request) {
-        model.addAttribute("vehicle", new Vehicle());
-        Long userId = authService.getUserId(request);
-        UserInfo user = userService.getUserById(userId);
-        if (user == null) {
-            System.out.println("User not found!");
-        }
-        model.addAttribute("user", user);
-        return "ADD_vehicle";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model, HttpServletRequest request) {
-        Vehicle vehicle = vehicleService.getVehicleById(id);
-        model.addAttribute("vehicle", vehicle);
-
-        Long userId = authService.getUserId(request);
-        UserInfo user = userService.getUserById(userId);
-        if (user == null) {
-            System.out.println("User not found!");
-        }
-        model.addAttribute("user", user);
-        return "ADD_vehicle";
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<ResponseDTO<Void>> addVehicle(@RequestBody Vehicle vehicle, HttpServletRequest request) {
+    @PostMapping("/save")
+    public ResponseEntity<ResponseDTO<Void>> saveVehicle(@RequestBody Vehicle vehicle, HttpServletRequest request) {
         try {
-            vehicleService.addVehicle(vehicle, request);
+            if (vehicle.getVehicleId() != null){
+                vehicleService.updateVehicle(vehicle);
+            }
+            else {
+                vehicleService.addVehicle(vehicle, request);
+            }
             return ResponseEntity.ok(new ResponseDTO<>("Vehicle registered successfully", 200, true, null));
         } catch (InvalidEntityException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -130,4 +105,11 @@ public class VehicleController {
         Vehicle vehicle = vehicleService.findByBookingId(bookingId);
         return ResponseEntity.ok(new ResponseDTO<>("Vehicles fetched successfully", 200, true, vehicle));
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<ResponseDTO<List<Vehicle>>> getUserVehicle(HttpServletRequest request) {
+        List<Vehicle> vehicles = vehicleService.findByUserId(authService.getUserId(request));
+        return ResponseEntity.ok(new ResponseDTO<>("vehicles fetched successfully", 200, true, vehicles));
+    }
+    
 }
