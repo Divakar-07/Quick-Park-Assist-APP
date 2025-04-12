@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Parking Spots by Date</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+        }
+        .parking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .search-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .date-range-container {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: auto;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-img-wrapper {
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .status-available {
+            background-color: #e3fcef;
+            color: #00875a;
+        }
+
+        .status-occupied {
+            background-color: #ffebe6;
+            color: #de350b;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: #0052cc;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .info-item i {
+            color: #536b8a;
+            width: 16px;
+            text-align: center;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: #0052cc;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .no-results {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .no-results i {
+            font-size: 48px;
+            color: #536b8a;
+            margin-bottom: 16px;
+        }
+
+        .no-results h4 {
+            color: #0052cc;
+            margin-bottom: 10px;
+        }
+		
+		/* Position the circular button on the top-left */
+		.left-arrow {
+		position: fixed;
+		top: 90px; /* Distance from the top */
+		left: 20px; /* Distance from the left */
+		width: 50px; /* Circle size */
+		height: 50px;
+		background-color: rgb(0, 0, 128); /* Blue background */
+		color: white; /* Arrow color */
+		font-size: 24px; /* Arrow size */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%; /* Makes it a circle */
+		text-decoration: none;
+		transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+
+		/* Add shadow effect */
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+		}
+
+		/* Hover effect */
+		.left-arrow:hover {
+		background-color: #0056b3; /* Darker blue */
+		color: white;
+		transform: scale(1.1); /* Slight zoom */
+		/* Add glowing effect */
+		box-shadow: 0 6px 15px rgba(0, 91, 187, 0.6);
+		text-decoration: none;
+		}
+
+
+
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbarLanding :: navbarLanding}"></div>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Find Booked Parking Spots by Date</h1>
+		
+		<a href="/spots/search" class="left-arrow">
+				<i class="fas fa-arrow-left"></i>
+		</a>
+        
+        <!-- Search Form -->
+        <div class="search-box">
+            <form th:action="@{/spots/search-by-date}" method="get">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="startDate"><i class="far fa-calendar-alt"></i> Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" th:value="${startDate}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="endDate"><i class="far fa-calendar-alt"></i> End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" th:value="${endDate}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-search"></i> Search Booked Spots</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Search Results -->
+        <div th:if="${spotsFound != null}">
+            <!-- If spots were found -->
+            <div th:if="${spotsFound}">
+                <div class="date-range-container text-center">
+                    <h4><i class="far fa-calendar-check"></i> Booked spots from 
+                        <span th:text="${startDate}"></span> to <span th:text="${endDate}"></span></h4>
+                    <p class="text-muted">Found <span th:text="${spots.size()}"></span> booked parking spots</p>
+                </div>
+                <div class="container mt-4">
+                    <div th:if="${spots != null and #arrays.length(spots) > 0}" class="parking-grid">
+                        <div th:each="spot : ${spots}" class="parking-spot">
+                            <div class="card">
+                                <div class="card-img-wrapper">
+                                    <div th:class="${spot.status == 'AVAILABLE' ? 'status-badge status-available' : 'status-badge status-occupied'}" 
+                                        th:text="BOOKED">
+                                    </div>
+                                    <img th:if="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}" 
+                                        th:src="${spot.spotImage}" 
+                                        alt="Spot Image">
+                                    <img th:unless="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}"
+                                        src="/images/default-parking.jpg"
+                                        alt="Default Parking Image">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${spot.spotNumber}">Spot Number</h5>
+                                    <div class="card-info">
+                                        <div class="info-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span th:text="${spot.location.city + ', ' + spot.location.streetAddress}"></span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-charging-station"></i>
+                                            <span th:text="${spot.hasEVCharging ? 'EV Charging Available' : 'No EV Charging'}"></span>
+                                        </div>
+                                        <span class="price-tag" th:text="${'₹'+spot.price + ' ' + spot.priceType}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${spots == null or #arrays.length(spots) == 0}" class="no-results">
+                    <i class="fas fa-search"></i>
+                    <h4>No spots found</h4>
+                    <p>Try changing dates.</p>
+                </div>
+        </div>
+        
+        <!-- Error Message -->
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+        
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Set min date for the date inputs to today
+        document.addEventListener('DOMContentLoaded', function() {
+            //const today = new Date().toISOString().split('T')[0];
+            //document.getElementById('startDate').min = today;
+            //document.getElementById('endDate').min = today;
+            
+            // Ensure end date is after start date
+            document.getElementById('startDate').addEventListener('change', function() {
+                document.getElementById('endDate').min = this.value;
+                
+                // If end date is before start date, reset it
+                if (document.getElementById('endDate').value && 
+                    document.getElementById('endDate').value < this.value) {
+                    document.getElementById('endDate').value = this.value;
+                }
+            });
+        });
+        
+        // Validate date range before form submission
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate > endDate) {
+                event.preventDefault();
+                alert('End date must be after start date');
+            }
+        });
+    </script>
+</body>
+</html>

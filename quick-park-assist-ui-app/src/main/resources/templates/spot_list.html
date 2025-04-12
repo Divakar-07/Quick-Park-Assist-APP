@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Spots</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Available Spots Section */
+        .available-spots-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Title Styling */
+        .available-spots-container h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Spot Cards Grid */
+        .spots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Individual Spot Card */
+        .spot-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            height: 350px; /* Fixed height for uniform cards */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spot-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Spot Image */
+        .spot-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            flex: 0 0 auto; /* Don't allow the image to shrink */
+        }
+
+        /* Spot Details */
+        .spot-info {
+            padding: 15px;
+            text-align: left;
+            flex: 1; /* Allow this section to grow to fill space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .spot-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .spot-info p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .spot-info strong {
+            color: #333;
+        }
+
+        /* No Spots Message */
+        .no-spots {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .spots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .spots-grid {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbarLanding :: navbarLanding}"></div>
+ 
+     <div class="available-spots-container">
+         <h1><b>Available Spots</b></h1>
+ 
+         <div th:if="${spots != null and #arrays.length(spots) > 0}" class="spots-grid">
+             <div th:each="spot : ${spots}" class="spot-card">
+                 <img th:if="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}" 
+                      th:src="${spot.spotImage}" 
+                      alt="Spot Image">
+
+                 <img th:unless="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}"
+                      src="/images/default-parking.jpg"
+                      alt="Default Parking Image">
+
+                 <div class="spot-info">
+                     <h3 th:text="${spot.spotNumber}">Spot Number</h3>
+                     <p><strong>Location:</strong> 
+                        <span th:text="${spot.location.city + ', ' + spot.location.streetAddress}"></span>
+                     </p>
+                     <p><strong>Price:</strong> 
+                        <span th:text="${spot.price + ' ' + spot.priceType}"></span>
+                     </p>
+                     <p><strong>EV Charging:</strong> 
+                        <span th:text="${spot.hasEVCharging ? 'Yes' : 'No'}"></span>
+                     </p>
+                 </div>
+             </div>
+         </div>
+
+         <div th:if="${#arrays.isEmpty(spots)}" class="no-spots">
+             <p>No spots available.</p>
+         </div>
+     </div>
+ </body>
+</html>

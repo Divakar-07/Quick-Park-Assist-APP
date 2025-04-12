@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Smart Spots</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-64 bg-blue-900 text-white h-screen p-5 transition-all duration-300"
+    >
+      <h1 class="text-2xl font-bold mb-5">Admin Panel</h1>
+      <nav>
+        <ul>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard')"
+          >
+            <span class="material-icons">dashboard</span> Dashboard
+          </li>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard/reports')"
+          >
+            <span class="material-icons">bar_chart</span> Reports
+          </li>
+          <li
+            onclick="navigateTo('/dashboard/parking-spot')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">local_parking</span> Parking Spots
+          </li>
+          <li
+            onclick="navigateTo('/admin/contact-messages')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">bar_chart</span> User Query
+          </li>
+          <li class="mb-3 flex flex-col">
+            <div
+              class="flex items-center justify-between gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+              onclick="toggleDropdown(event)"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-icons">extension</span> ADD-ON
+              </div>
+              <span
+                id="dropdownIcon"
+                class="material-icons transition-all duration-300"
+                >expand_more</span
+              >
+            </div>
+
+            <!-- Dropdown inside sidebar -->
+            <ul
+              id="addonDropdown"
+              class="hidden flex flex-col mt-1 bg-blue-800 rounded-lg"
+            >
+              <li
+                onclick="navigateTo('/addons/view-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>View ADD-ONs</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/new-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>New ADD-ON</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/status')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>Status ADD-ON</p>
+              </li>
+            </ul>
+          </li>
+
+
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <form action="/auth/logout" method="post">
+              <button class="flex items-center gap-2">
+                <span class="material-icons">logout</span> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <header
+          class="flex justify-between items-center bg-white p-4 rounded shadow"
+        >
+          <h2 class="text-xl font-bold">Admin Dashboard</h2>
+          <div class="relative">
+            <button
+              id="profileMenuBtn"
+              class="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
+            >
+              <span class="material-icons">account_circle</span> Admin
+            </button>
+            <!-- Profile Dropdown -->
+            <div
+              id="profileMenu"
+              class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded hidden"
+            >
+              <ul class="p-2">
+                <li class="p-2 hover:bg-gray-200 cursor-pointer">Profile</li>
+                <li class="p-2 hover:bg-gray-200 cursor-pointer">Logout</li>
+              </ul>
+            </div>
+          </div>
+        </header>
+        <p class="text-gray-600 mt-2">Manage your smart spots efficiently.</p>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div
+            class="bg-blue-500 text-white p-6 rounded-lg shadow-md text-center"
+          >
+            <h3 class="text-xl font-semibold">Total Spots</h3>
+            <p
+              id="totalSpots"
+              class="text-2xl font-bold mt-2"
+              th:text="${statistics.totalSpots}"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-green-500 text-white p-6 rounded-lg shadow-md text-center"
+          >
+            <h3 class="text-xl font-semibold">Total Bookings</h3>
+            <p
+              id="totalBookings"
+              class="text-2xl font-bold mt-2"
+              th:text="${statistics.totalBookings}"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-red-500 text-white p-6 rounded-lg shadow-md text-center"
+          >
+            <h3 class="text-xl font-semibold">Pending Payments</h3>
+            <p
+              id="pendingPayments"
+              class="text-2xl font-bold mt-2"
+              th:text="${statistics.pendingPayments}"
+            >
+              0
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+          <div class="bg-white p-6 shadow-md rounded-lg flex items-center">
+            <span class="material-icons text-blue-500 text-4xl">add</span>
+            <div class="ml-4">
+              <h3 class="text-gray-700">Active Spots</h3>
+              <p class="text-2xl font-bold" th:text="${statistics.activeSpots}">
+                0
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 shadow-md rounded-lg flex items-center">
+            <span class="material-icons text-yellow-500 text-4xl"
+              >remove_circle</span
+            >
+            <div class="ml-4">
+              <h3 class="text-gray-700">Inactive Spots</h3>
+              <p
+                class="text-2xl font-bold"
+                th:text="${statistics.inactiveSpots}"
+              >
+                0
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 shadow-md rounded-lg flex items-center">
+            <span class="material-icons text-green-500 text-4xl"
+              >check_circle</span
+            >
+            <div class="ml-4">
+              <h3 class="text-gray-700">Active Bookings</h3>
+              <p
+                class="text-2xl font-bold"
+                th:text="${statistics.activeBookings}"
+              >
+                0
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 shadow-md rounded-lg flex items-center">
+            <span class="material-icons text-red-500 text-4xl">event_busy</span>
+            <div class="ml-4">
+              <h3 class="text-gray-700">Booked Spots</h3>
+              <p class="text-2xl font-bold" th:text="${statistics.bookedSpots}">
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Navigation Buttons -->
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/spots/search"
+            class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600"
+          >
+            Go to Spots Module
+          </a>
+
+          <a
+            href="/dashboard/reports"
+            class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600"
+          >
+            View Reports
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- JavaScript for Profile Menu -->
+    <script>
+      document
+        .getElementById("profileMenuBtn")
+        .addEventListener("click", function () {
+          document.getElementById("profileMenu").classList.toggle("hidden");
+        });
+
+      function navigateTo(route) {
+        window.location.assign(route);
+      }
+
+      function toggleDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById("addonDropdown");
+        const icon = document.getElementById("dropdownIcon");
+
+        dropdown.classList.toggle("hidden");
+
+        // Toggle arrow direction
+        if (dropdown.classList.contains("hidden")) {
+          icon.textContent = "expand_more";
+        } else {
+          icon.textContent = "expand_less";
+        }
+      }
+
+      // Close dropdown when clicking anywhere else
+      document.addEventListener("click", function (event) {
+        let dropdown = document.getElementById("addonDropdown");
+        if (!dropdown.classList.contains("hidden")) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      document
+        .getElementById("addonDropdown")
+        .addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+    </script>
+  </body>
+</html>

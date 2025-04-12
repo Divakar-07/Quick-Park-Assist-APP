@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Add-Ons</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+    body 
+    {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #1FA3D4, #86C7E2, #206F91, #5B879F, #A4C1CA);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 80%;
+}
+
+h1 {
+    color: #206F91;
+}
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filter-container select, 
+.filter-container input, 
+.filter-container button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #206F91;
+}
+
+button {
+    background-color: #1FA3D4;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #206F91;
+}
+
+#addonList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.addon-card {
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+}
+
+.addon-card:hover {
+    transform: scale(1.05);
+}
+
+.btn {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    background: #1FA3D4;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: #206F91;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Add-Ons</h1>
+
+        <!-- Filter Section -->
+        <div class="filter-container">
+            <select id="classificationFilter">
+                <option value="all">All Vehicles</option>
+                <option value="car">Car</option>
+                <option value="bike">Bike</option>
+                <option value="truck">Truck</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search Add-On">
+            <button onclick="applyFilters()">Filter</button>
+        </div>
+
+        <!-- Add-On List -->
+        <div id="addonList">
+            <div class="addon-card" data-classification="car">
+                <h3>Addon ID: A001</h3>
+                <p><strong>Service:</strong> Premium Car Wash</p>
+                <p><strong>Classification:</strong> Car</p>
+                <p><strong>Price:</strong> ₹500</p>
+            </div>
+
+            <div class="addon-card" data-classification="bike">
+                <h3>Addon ID: A002</h3>
+                <p><strong>Service:</strong> Bike Chain Lubrication</p>
+                <p><strong>Classification:</strong> Bike</p>
+                <p><strong>Price:</strong> ₹200</p>
+            </div>
+
+            <div class="addon-card" data-classification="truck">
+                <h3>Addon ID: A003</h3>
+                <p><strong>Service:</strong> Heavy-Duty Engine Check</p>
+                <p><strong>Classification:</strong> Truck</p>
+                <p><strong>Price:</strong> ₹1500</p>
+            </div>
+        </div>
+        
+        <a href="javascript:history.back()" class="btn">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
+    </div>
+
+    <script>
+        function applyFilters() {
+            let filter = document.getElementById("classificationFilter").value;
+            let searchText = document.getElementById("searchInput").value.toLowerCase();
+            let addons = document.querySelectorAll(".addon-card");
+
+            addons.forEach(addon => {
+                let classification = addon.getAttribute("data-classification");
+                let serviceText = addon.textContent.toLowerCase();
+                
+                if ((filter === "all" || classification === filter) && serviceText.includes(searchText)) {
+                    addon.style.display = "block";
+                } else {
+                    addon.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

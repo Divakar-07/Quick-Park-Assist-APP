@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* background: linear-gradient(135deg, #1FA3D4, #86C7E2, #206F91, #5B879F); */
+            margin: 0;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            margin: auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #206F91;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #206F91;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #1FA3D4;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #1FA3D4;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #206F91;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #1FA3D4;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>PAYMENT HISTORY</h1>
+
+    <div class="container">
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <form method="get" action="/history">
+            <label for="start">From:</label>
+            <input type="date" id="start" name="start" required>
+
+            <label for="end">To:</label>
+            <input type="date" id="end" name="end" required>
+
+            <button type="submit">Filter</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Order ID</th>
+                    <th>Amount ₹</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${payments == null or payments.isEmpty()}">
+                    <td colspan="4">No payments found for the selected date range.</td>
+                </tr>
+                
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.id}"></td>
+                    <td th:text="${payment.orderId}"></td>
+                    <td th:text="${payment.totalAmount}"></td>
+                    <td th:text="${#temporals.format(payment.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="/dashboard" class="back-button">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

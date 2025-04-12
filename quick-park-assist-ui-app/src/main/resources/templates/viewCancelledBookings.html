@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View My Cancelled Bookings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+        <!-- <h2 class="text-2xl font-semibold text-gray-700 text-center mb-4">View My Cancelled Bookings</h2> -->
+
+        <!-- Form to Submit Contact Number -->
+        <form th:action="@{/ui/booking/cancelledBookings}" method="get" class="mb-6">
+            <div class="flex flex-col space-y-2">
+                <!-- <label for="contactNumber" class="text-sm font-medium text-gray-700">Contact Number</label>
+                <input type="text" id="contactNumber" name="contactNumber" 
+                       class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" 
+                       placeholder="Enter Contact Number" required>
+                <button type="submit" 
+                        class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                    View Cancelled Bookings
+                </button> -->
+            </div>
+        </form>
+
+        <!-- Error Message Display -->
+        <div th:if="${error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white rounded-lg shadow-md">
+                <thead class="bg-blue-500 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Booking ID</th>
+                        <th class="py-3 px-4 text-left">Start Date</th>
+                        <th class="py-3 px-4 text-left">Start Time</th>
+                        <th class="py-3 px-4 text-left">Vehicle Type</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <!-- Check if cancelledBookings is empty -->
+                    <tr th:if="${cancelledBookings == null or cancelledBookings.isEmpty()}">
+                        <td colspan="6" class="text-center py-4">No cancelled bookings found.</td>
+                    </tr>
+                    <!-- Iterate over cancelledBookings -->
+                    <tr th:each="booking : ${cancelledBookings}" class="border-b">
+                        <td class="py-3 px-4" th:text="${booking.bookingId}"></td>
+                        <td class="py-3 px-4" th:text="${booking.startDate}"></td>
+                        <td class="py-3 px-4" th:text="${booking.startTime}"></td>
+                        <td class="py-3 px-4" th:text="${booking.vehicle.vehicleType}"></td>
+                        <td class="py-3 px-4" th:text="${booking.status}"></td>
+                        <td class="py-3 px-4" th:text="${booking.totalAmount}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 text-center">
+            <a th:href="@{/ui/booking/home}" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

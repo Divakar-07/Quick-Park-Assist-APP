@@ -1,0 +1,87 @@
+    /* Floating circular icon at bottom-right */
+        .faq-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+
+        /* Chat window styling */
+        .faq-chat {
+            display: none;
+            position: fixed;
+            width: 320px;
+            background-color: white;
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+
+        .faq-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .faq-header span {
+            cursor: pointer;
+        }
+
+        .faq-body {
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .faq-input {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        #questionInput {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #responseArea {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }

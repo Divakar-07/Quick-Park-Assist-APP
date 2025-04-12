@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Bookings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow-md mt-10">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">View All Bookings</h2>
+
+        <!-- Error Message Display -->
+        <div th:if="${error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Success Message Display -->
+        <div th:if="${message}" class="mb-4 p-3 bg-green-100 text-green-800 rounded">
+            <span th:text="${message}"></span>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Filter Bookings</h3>
+            <form th:action="@{/ui/booking/viewAll}" method="get" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium">Booking ID</label>
+                        <input type="number" name="bookingId" placeholder="Enter Booking ID"
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Slot ID</label>
+                        <input type="number" name="spotId" placeholder="Enter Slot ID"
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Contact Number</label>
+                        <input type="text" name="contactNumber" placeholder="Enter Contact Number"
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Date Range</label>
+                        <div class="flex space-x-2">
+                            <input type="date" name="startDate" placeholder="Start Date"
+                                   class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                            <input type="date" name="endDate" placeholder="End Date"
+                                   class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit"
+                        class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                    Apply Filters
+                </button>
+            </form>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border rounded">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-4 py-2">Booking ID</th>
+                        <th class="px-4 py-2">Slot ID</th>
+                        <th class="px-4 py-2">Registration Number</th>
+                        <th class="px-4 py-2">Vehicle Type</th>
+                        <th class="px-4 py-2">Start Date</th>
+                        <th class="px-4 py-2">End Date</th>
+                        <th class="px-4 py-2">Start Time</th>
+                        <th class="px-4 py-2">End Time</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Total Amount</th>
+                        <th class="px-4 py-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}" class="border-b">
+                        <td class="px-4 py-2 text-center" th:text="${booking.bookingId}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.spotInfo.spotId}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.vehicle.registrationNumber}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.vehicle.vehicleType}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.startDate}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.endDate}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.startTime}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.endTime}"></td>
+                        <td class="px-4 py-2 text-center" th:text="${booking.status}"></td>
+                        <td class="px-4 py-2 text-center">₹<span th:text="${booking.totalAmount}"></span>/-</td>
+                        <td class="px-4 py-2 text-center">
+                            <button th:if="${booking.status != 'cancelled'}"
+                                    class="py-1 px-3 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                                    th:data-bookingid="${booking.bookingId}"
+                                    th:text="'Pay ₹' + ${booking.totalAmount} + '/-'">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Return to Home Button -->
+        <a th:href="@{/ui/booking/home}"
+           class="block mt-4 text-center text-blue-500 hover:underline">
+            Return to Home
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("button[data-bookingid]").forEach(button => {
+                button.addEventListener("click", function () {
+                    let bookingId = this.getAttribute("data-bookingid");
+                    alert("Processing payment for Booking ID: " + bookingId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

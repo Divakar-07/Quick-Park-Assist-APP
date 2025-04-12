@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Booking</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow-md mt-10">
+      <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">
+        Add New Booking
+      </h2>
+
+      <!-- Error Message Display -->
+      <div th:if="${error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+        <strong th:text="${error}" id="error-message"></strong>
+      </div>
+
+      <!-- Success Message Display -->
+      <div
+        th:if="${message}"
+        class="mb-4 p-3 bg-green-100 text-green-800 rounded"
+      >
+        <strong th:text="${message}" id="success-message"></strong>
+      </div>
+
+      <!-- Booking Form -->
+      <form
+        id="bookingForm"
+        th:action="@{/ui/booking/save}"
+        method="post"
+        class="space-y-4"
+      >
+        <!-- Slot ID -->
+        <div>
+          <label class="block text-sm font-medium">Spot ID</label>
+          <input
+            type="number"
+            name="spotId"
+            required
+            readonly
+            id="spotId"
+            th:value="${spotId}"
+            class="w-full p-2 border rounded"
+          />
+        </div>
+
+        <!-- Registration Number -->
+        <div>
+          <label class="block text-sm font-medium">Select Vehicle</label>
+          <select
+            name="registrationNumber"
+            id="registrationNumber"
+            required
+            class="w-full p-2 border rounded"
+          >
+            <option value="" disabled selected>Select a vehicle</option>
+            <!-- Loop through the vehicles list -->
+            <option
+              th:each="vehicle : ${vehicles}"
+              th:value="${vehicle.registrationNumber}"
+              th:text="${vehicle.registrationNumber}"
+            ></option>
+          </select>
+        </div>
+
+        <!-- Booking Date & Time -->
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold mb-2">Booking Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium">Start Date</label>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                required
+                class="w-full p-2 border rounded"
+              />
+
+              <label class="block text-sm font-medium">End Date</label>
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                required
+                class="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Start Time</label>
+              <input
+                type="time"
+                id="startTime"
+                name="startTime"
+                required
+                class="w-full p-2 border rounded"
+              />
+
+              <label class="block text-sm font-medium">End Time</label>
+              <input
+                type="time"
+                id="endTime"
+                name="endTime"
+                required
+                class="w-full p-2 border rounded"
+              />
+            </div>
+          </div>
+          <!-- Booking Hours Calculation -->
+          <div class="mt-4">
+            <p id="bookingHours" class="text-sm text-gray-600"></p>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Create Booking
+        </button>
+      </form>
+
+      <!-- Return to Home Button -->
+      <a
+        th:href="@{/ui/booking/home}"
+        class="block mt-4 text-center text-blue-500 hover:underline"
+      >
+        Return to Home
+      </a>
+    </div>
+
+    <!-- JavaScript for Validations -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const startTimeInput = document.getElementById("startTime");
+        const endTimeInput = document.getElementById("endTime");
+        const bookingHoursDisplay = document.getElementById("bookingHours");
+
+        // ✅ Prevent Past Dates Selection
+        function setMinDate(input) {
+          const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+          input.setAttribute("min", today);
+        }
+        setMinDate(startDateInput);
+        setMinDate(endDateInput);
+
+        startDateInput.addEventListener("change", function () {
+          if (startDateInput.value < new Date().toISOString().split("T")[0]) {
+            alert("❌ Start Date cannot be in the past.");
+            startDateInput.value = "";
+          }
+          endDateInput.setAttribute("min", startDateInput.value);
+        });
+
+        endDateInput.addEventListener("change", function () {
+          if (endDateInput.value < startDateInput.value) {
+            alert("❌ End Date cannot be before Start Date.");
+            endDateInput.value = "";
+          }
+        });
+
+        function validateTime() {
+          const startDate = startDateInput.value;
+          const endDate = endDateInput.value;
+          const startTime = startTimeInput.value;
+          const endTime = endTimeInput.value;
+
+          if (!startDate || !endDate || !startTime || !endTime) return;
+
+          // Convert to Date objects for comparison
+          const startDateTime = new Date(`${startDate}T${startTime}`);
+          const endDateTime = new Date(`${endDate}T${endTime}`);
+
+          // Check if end date/time is after start date/time
+          if (endDateTime <= startDateTime) {
+            alert("❌ End Time must be after Start Time.");
+            endTimeInput.value = "";
+            return;
+          }
+
+          // ✅ Calculate Booking Hours
+          const hours = (endDateTime - startDateTime) / 36e5; // Convert ms to hours
+          bookingHoursDisplay.innerText = `Total Booking Hours: ${hours.toFixed(
+            2
+          )} hour(s)`;
+        }
+
+        startTimeInput.addEventListener("change", validateTime);
+        endTimeInput.addEventListener("change", validateTime);
+      });
+    </script>
+  </body>
+</html>

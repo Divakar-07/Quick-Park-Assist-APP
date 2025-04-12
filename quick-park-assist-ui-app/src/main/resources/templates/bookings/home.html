@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <title>SMART PARK</title>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #64748b;
+            --background-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-gradient);
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 70px; /* Space for fixed navbar */
+        }
+
+        /* Navbar Fix */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 80px auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: black;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1ca7ec;
+            color: white;
+        }
+        .nav-link:hover {
+            background: #1ca7ec;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light bg-opacity-75" style="padding-top: 0; padding-bottom: 0;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/images/download (5).png" alt="Logo" width="150">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-black" href="/dashboard"><i class="fas fa-home me-1"></i>Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-black" href="#" id="servicesDropdown" data-bs-toggle="dropdown">Our Service</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/spots/search">Smart Spots</a></li>
+                            <li><a class="dropdown-item" href="/ui/booking/home">Booking</a></li>
+                            <li><a class="dropdown-item" href="/history">Payment History</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-black" href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>SMART PARK</h1>
+        <h2>Smart Parking Management System</h2>
+        <div class="grid">
+            <a class="btn btn-secondary" th:href="@{/ui/booking/viewAll}">
+                <i class="bi bi-list"></i> All Bookings
+            </a>
+            <a class="btn btn-secondary" th:href="@{/ui/booking/update}">
+                <i class="bi bi-pencil-square"></i> Update Booking
+            </a>
+            <a class="btn btn-secondary" th:href="@{/ui/booking/cancel}">
+                <i class="bi bi-x-circle"></i> Cancel Booking
+            </a>
+            <a class="btn btn-secondary" th:href="@{/ui/booking/viewCancelledBookingForm}">
+                <i class="bi bi-search"></i> View Cancelled Bookings
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

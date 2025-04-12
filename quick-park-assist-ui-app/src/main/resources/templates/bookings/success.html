@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1FA3D4, #86C7E2, #206F91, #5B879F, #A4C1CA);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .receipt-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .success-icon img {
+            width: 50px;
+            height: 50px;
+            animation: blink 1s infinite alternate;
+        }
+
+
+        .receipt-card h2 {
+            color: #209133;
+            margin-bottom: 10px;
+        }
+
+        .receipt-details p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #1FA3D4;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #209133;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #176f28;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-card">
+        <div class="success-icon">
+            <img th:src="@{/images/download.png}" alt="Success">
+        </div>
+        <h2>Payment Successful</h2>
+        <div class="receipt-details">
+            <p>Order ID: <span class="highlight" th:text="${orderId}"></span></p>
+            <p>Book ID: <span class="highlight" th:text="${bookingId}"></span></p>
+            <p>Amount Paid: ₹<span class="highlight" th:text="${totalAmount}"></span></p>
+            <p>A receipt has been sent to: <span class="highlight" th:text="${userEmail}"></span></p>
+        </div>
+        <br>
+        <a class="back-button" th:href="@{/ui/booking/viewAll}">Back to Dashboard</a>
+    </div>
+    
+</body>
+</html>

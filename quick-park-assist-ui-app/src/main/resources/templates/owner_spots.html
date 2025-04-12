@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Parking Spots</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* General Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+        }
+
+        /* Heading */
+        h2 {
+            color: #343a40;
+            font-weight: bold;
+        }
+
+        /* Card Styling */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            background: #ffffff;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        /* Card Image */
+        .card img {
+            height: 180px;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Card Title */
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Card Text */
+        .card-text {
+            color: #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn-outline-primary,
+        .btn-outline-danger {
+            border-radius: 8px;
+            padding: 5px 12px;
+            transition: 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* No Spots Message */
+        .alert-info {
+            background-color: #e9f5ff;
+            border-left: 5px solid #007bff;
+            color: #007bff;
+            font-weight: bold;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-info a {
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .row-cols-md-3 .col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+		
+		/* Position the circular button on the top-left */
+		.left-arrow {
+		position: fixed;
+		top: 90px; /* Distance from the top */
+		left: 20px; /* Distance from the left */
+		width: 50px; /* Circle size */
+		height: 50px;
+		background-color: rgb(0, 0, 128); /* Blue background */
+		color: white; /* Arrow color */
+		font-size: 24px; /* Arrow size */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%; /* Makes it a circle */
+		text-decoration: none;
+		transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+
+		/* Add shadow effect */
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+		}
+
+		/* Hover effect */
+		.left-arrow:hover {
+		background-color: #0056b3; /* Darker blue */
+		color: white;
+		transform: scale(1.1); /* Slight zoom */
+		/* Add glowing effect */
+		box-shadow: 0 6px 15px rgba(0, 91, 187, 0.6);
+		text-decoration: none;
+		}
+		
+
+
+
+    </style>
+</head>
+<body>
+	<div th:replace="~{fragments/navbarLanding :: navbarLanding}"></div>
+	
+	<a href="/spots/search" class="left-arrow">
+	<i class="fas fa-arrow-left"></i>
+	</a>
+	    
+	    <div class="container mt-4">
+	        <h2 class="mb-4">My Parking Spots</h2>
+	        
+	        <div th:if="${spots == null or #arrays.length(spots) == 0}" class="alert alert-info">
+	            You have not listed any parking spots yet. 
+	            <a th:href="@{/spots/create}" class="btn btn-primary btn-sm ms-2">Create a Spot</a>
+	        </div>
+
+	        <div th:if="${spots != null and #arrays.length(spots) > 0}" class="row row-cols-1 row-cols-md-3 g-4">
+	            <div th:each="spot : ${spots}" class="col">
+	                <div class="card h-100">
+	                    <img th:if="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}" 
+                      th:src="${spot.spotImage}" 
+                      alt="Spot Image">
+
+                        <img th:unless="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}"
+                            src="/images/default-parking.jpg"
+                            alt="Default Parking Image">
+	                    <div class="card-body">
+	                        <h5 class="card-title" th:text="${spot.spotNumber}">Spot Number</h5>
+	                        <p class="card-text">
+	                            Location: <span th:text="${spot.location.city + ', ' + spot.location.streetAddress}"></span><br>
+	                            Price: <span th:text="${spot.price + ' ' + spot.priceType}"></span><br>
+	                            Status: <span th:text="${spot.status}"></span><br>
+	                            EV Charging: <span th:text="${spot.hasEVCharging ? 'Yes' : 'No'}"></span>
+	                        </p>
+	                        <div class="d-flex justify-content-between">
+	                            <a th:href="@{'/spots/edit/' + ${spot.spotId}}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <button th:onclick="|toggleActivation('${spot.spotId}')|" 
+                                        class="btn btn-sm" 
+                                        th:classappend="${spot.isActive ? 'btn-outline-warning' : 'btn-outline-success'}"
+                                        th:text="${spot.isActive ? 'Deactivate' : 'Activate'}">
+                                        Toggle
+                                </button>
+	                            
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+	    <script>
+	        
+
+			function toggleActivation(spotId) {
+
+						                if (confirm('Are you sure you want to change the activation status of this spot?')) {
+
+						                    fetch('/spots/toggle?spotId=' + spotId, {
+
+						                        method: 'GET',
+
+						                    })
+			                    .then(response => {
+			                        if (response.ok) {
+			                            window.location.reload();
+			                        } else {
+			                            alert('Failed to toggle spot activation. Please try again.');
+			                        }
+			                    })
+			                    .catch(error => {
+			                        alert('An error occurred: ' + error);
+			                    });
+			                }
+			            }
+
+	    </script>
+	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+	</html>

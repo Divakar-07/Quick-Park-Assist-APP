@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Navigation</title>
+    
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      /* Keep existing styles */
+      .navbar-custom {
+        background-color: rgb(0, 64, 128); /* Dark background */
+        color: white;
+      }
+      .navbar-custom .navbar-brand,
+      .navbar-custom .nav-link {
+        color: black;
+        font-weight: bolder;
+        font-family: "Times New Roman", Times, serif;
+      }
+      .navbar-custom .nav-link:hover {
+        color: #ffcc00; /* Highlight on hover */
+      }
+
+      /* New modern styles */
+      .navbar-custom {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 12px 0;
+        transition: all 0.3s ease;
+        background: linear-gradient(
+          135deg,
+          rgb(0, 64, 128) 0%,
+          rgb(0, 96, 192) 100%
+        );
+      }
+
+      .navbar-custom .navbar-brand {
+        color: white;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s;
+        padding: 5px 15px;
+        border-radius: 5px;
+      }
+
+      .navbar-custom .navbar-brand:hover {
+        transform: translateY(-2px);
+        color: white;
+      }
+
+      .navbar-custom .nav-link {
+        color: white;
+        margin: 0 5px;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        position: relative;
+        font-weight: 500;
+      }
+
+      .navbar-custom .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: #ffcc00;
+        transition: all 0.3s ease;
+      }
+
+      .navbar-custom .nav-link:hover {
+        color: #ffcc00;
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .navbar-custom .nav-link:hover::after {
+        width: 80%;
+        left: 10%;
+      }
+
+      /* Active state */
+      .navbar-custom .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #ffcc00;
+      }
+
+      /* Menu divider */
+      .navbar-custom .menu-divider {
+        height: 30px;
+        width: 1px;
+        background-color: rgba(255, 255, 255, 0.3);
+        margin: 0 10px;
+      }
+
+      /* Custom toggler */
+      .navbar-custom .navbar-toggler {
+        border: none;
+        padding: 0.25rem 0.75rem;
+        font-size: 1.25rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: all 0.2s;
+      }
+
+      .navbar-custom .navbar-toggler:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .navbar-custom .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+
+      /* Special styling for logout */
+      .navbar-custom .logout-link {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+      }
+
+      .navbar-custom .logout-link:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: white;
+        color: #ffcc00;
+      }
+
+      /* For smaller screens */
+      @media (max-width: 991.98px) {
+        .navbar-custom .navbar-collapse {
+          background-color: rgb(0, 64, 128);
+          border-radius: 8px;
+          padding: 10px;
+          margin-top: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-custom .nav-link {
+          border-radius: 4px;
+          margin: 5px 0;
+        }
+
+        .navbar-custom .menu-divider {
+          height: 1px;
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+
+      /* Animation for icon */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .nav-icon-hover:hover i {
+        animation: spin 1s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      th:fragment="navbarLanding"
+      class="navbar navbar-expand-lg navbar-custom"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="/images/download (5).png" alt="Logo" width="150" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <!-- Home is always visible -->
+            <li class="nav-item">
+              <a class="nav-link nav-icon-hover" th:href="@{/dashboard}"
+                ><i class="fas fa-home me-1"></i> Home</a
+              >
+            </li>
+
+            <!-- Admin-specific links -->
+            <th:block
+              th:if="${user != null and user.userType.toString()=='ADMIN'}"
+            >
+              <li class="nav-item">
+                <a class="nav-link nav-icon-hover" th:href="@{/spots/create}"
+                  ><i class="fas fa-plus-circle me-1"></i> Add Spot</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link nav-icon-hover"
+                  th:href="@{/spots/statistics}"
+                  ><i class="fas fa-chart-bar me-1"></i> Spot Statistics</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-icon-hover" th:href="@{/spots/owner}"
+                  ><i class="fas fa-parking me-1"></i> My Spots</a
+                >
+              </li>
+            </th:block>
+
+            <!-- Vehicle Owner-specific links -->
+            <th:block
+              th:with="UserType=${T(com.qpa.entity.UserType)}"
+              th:if="${user != null and user.userType.toString()=='VEHICLE_OWNER'}"
+            >
+              <li class="nav-item">
+                <a class="nav-link nav-icon-hover" th:href="@{/spots/search}"
+                  ><i class="fas fa-search me-1"></i> Search Spots</a
+                >
+              </li>
+            </th:block>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <form
+                class="nav-link logout-link"
+                action="/auth/logout"
+                method="post"
+              >
+                <button type="submit">
+                  <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Add active class based on current page
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          const href = link.getAttribute("href");
+          if (
+            href &&
+            currentLocation.includes(href.replace("@{", "").replace("}", ""))
+          ) {
+            link.classList.add("active");
+          }
+        });
+
+        // Add hover effect for brand
+        const brand = document.querySelector(".navbar-brand");
+        brand.addEventListener("mouseenter", function () {
+          this.style.transform = "translateY(-2px)";
+        });
+        brand.addEventListener("mouseleave", function () {
+          this.style.transform = "translateY(0)";
+        });
+      });
+    </script>
+  </body>
+</html>

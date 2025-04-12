@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+  </head>
+  <body class="bg-gray-100 flex">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-64 bg-blue-900 text-white h-screen p-5 transition-all duration-300"
+    >
+      <h1 class="text-2xl font-bold mb-5">Admin Panel</h1>
+      <nav>
+        <ul>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard')"
+          >
+            <span class="material-icons">dashboard</span> Dashboard
+          </li>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard/reports')"
+          >
+            <span class="material-icons">bar_chart</span> Reports
+          </li>
+          <li
+            onclick="navigateTo('/dashboard/parking-spot')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">local_parking</span> Parking Spots
+          </li>
+          <li
+            onclick="navigateTo('/admin/contact-messages')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">bar_chart</span> User Query
+          </li>
+          <li class="mb-3 flex flex-col">
+            <div
+              class="flex items-center justify-between gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+              onclick="toggleDropdown(event)"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-icons">extension</span> ADD-ON
+              </div>
+              <span
+                id="dropdownIcon"
+                class="material-icons transition-all duration-300"
+                >expand_more</span
+              >
+            </div>
+
+            <!-- Dropdown inside sidebar -->
+            <ul
+              id="addonDropdown"
+              class="hidden flex flex-col mt-1 bg-blue-800 rounded-lg"
+            >
+              <li
+                onclick="navigateTo('/addons/view-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>View ADD-ONs</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/new-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>New ADD-ON</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/status')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>Status ADD-ON</p>
+              </li>
+            </ul>
+          </li>
+
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <form action="/auth/logout" method="post">
+              <button class="flex items-center gap-2">
+                <span class="material-icons">logout</span> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Header -->
+      <header
+        class="flex justify-between items-center bg-white p-4 rounded shadow"
+      >
+        <h2 class="text-xl font-bold">Admin Dashboard</h2>
+        <div class="relative">
+          <button
+            id="profileMenuBtn"
+            class="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
+          >
+            <span class="material-icons">account_circle</span> Admin
+          </button>
+          <!-- Profile Dropdown -->
+          <div
+            id="profileMenu"
+            class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded hidden"
+          >
+            <ul class="p-2">
+              <li class="p-2 hover:bg-gray-200 cursor-pointer">Profile</li>
+              <li
+            class="p-2 hover:bg-gray-200 cursor-pointer"
+          >
+            <form action="/auth/logout" method="post">
+              <button class="flex items-center gap-2">
+                <span class="material-icons">logout</span> Logout
+              </button>
+            </form>
+          </li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Widgets -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <div class="bg-white p-4 rounded shadow flex items-center">
+          <span class="material-icons text-blue-500 text-4xl">people</span>
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Current Active Bookings</h3>
+            <p class="text-gray-500 text-xl" th:text="${totalActiveUsers}">
+              Loading...
+            </p>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded shadow flex items-center">
+          <span class="material-icons text-green-500 text-4xl"
+            >local_parking</span
+          >
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Total Parking Slots</h3>
+            <p class="text-gray-500 text-xl" th:text="${totalParkingSpots}">
+              Loading...
+            </p>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded shadow flex items-center">
+          <span class="material-icons text-red-500 text-4xl"
+            >currency_rupee</span
+          >
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Total Earnings</h3>
+            <p class="text-gray-500 text-xl" th:text="${totalEarnings}">
+              Loading
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="bg-white p-6 mt-6 rounded shadow">
+        <h3 class="text-xl font-bold mb-4">All Admins</h3>
+        <table class="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">ID</th>
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Email</th>
+              <th class="border p-2">Role</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="admin : ${admins}">
+              <td class="border p-2" th:text="${admin.userId}"></td>
+              <td class="border p-2" th:text="${admin.fullName}"></td>
+              <td class="border p-2" th:text="${admin.email}"></td>
+              <td class="border p-2" th:text="${admin.userType}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+      // Toggle Profile Dropdown
+      document
+        .getElementById("profileMenuBtn")
+        .addEventListener("click", function () {
+          document.getElementById("profileMenu").classList.toggle("hidden");
+        });
+      function navigateTo(route) {
+        window.location.assign(route);
+      }
+
+      function toggleDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById("addonDropdown");
+        const icon = document.getElementById("dropdownIcon");
+
+        dropdown.classList.toggle("hidden");
+
+        // Toggle arrow direction
+        if (dropdown.classList.contains("hidden")) {
+          icon.textContent = "expand_more";
+        } else {
+          icon.textContent = "expand_less";
+        }
+      }
+
+      // Close dropdown when clicking anywhere else
+      document.addEventListener("click", function (event) {
+        let dropdown = document.getElementById("addonDropdown");
+        if (!dropdown.classList.contains("hidden")) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      document
+        .getElementById("addonDropdown")
+        .addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+    </script>
+  </body>
+</html>

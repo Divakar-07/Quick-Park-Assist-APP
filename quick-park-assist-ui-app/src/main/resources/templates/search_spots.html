@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Search Parking Spots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #3a86ff;
+        --primary-dark: #2667cc;
+        --secondary: #8338ec;
+        --accent: #ff006e;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #06d6a0;
+        --warning: #ffbe0b;
+        --danger: #ef476f;
+        --text-primary: #212529;
+        --text-secondary: #6c757d;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: var(--text-primary);
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        padding: 0 20px;
+      }
+
+      /* Compact Search Bar */
+      .search-panel {
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        margin: 20px 0;
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+
+      .filter-container {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 16px;
+      }
+
+      .filter-item {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .form-group {
+        margin-bottom: 0;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .form-select,
+      .form-control {
+        border: 1px solid #e0e5ee;
+        border-radius: var(--radius-sm);
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+
+      .form-select:focus,
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.15);
+      }
+
+      .search-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 8px 16px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        white-space: nowrap;
+        transition: all 0.2s;
+		width: 100%;
+      }
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+      }
+	  
+
+      .advanced-toggle {
+        color: var(--primary);
+        background: none;
+        border: none;
+        font-size: 1rem;
+        padding: 10;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 10px;
+      }
+
+      .advanced-toggle:hover {
+        color: var(--primary-dark);
+      }
+
+      .advanced-filters {
+        padding: 0 16px 16px;
+        border-top: 1px solid #e0e5ee;
+      }
+
+      /* Spot Cards */
+      .parking-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        border: none;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+		cursor: pointer;
+      }
+
+      .card-img-wrapper {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .card-img-wrapper::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      }
+
+      .card-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+
+      .card:hover .card-img-wrapper img {
+        transform: scale(1.05);
+      }
+
+      .status-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        z-index: 2;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .status-available {
+        background-color: var(--success);
+        color: white;
+      }
+
+      .status-occupied {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .card-body {
+        padding: 16px;
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+
+      .card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .info-item i {
+        color: var(--primary);
+        width: 16px;
+        text-align: center;
+      }
+
+      .price-tag {
+        position: relative;
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 1.2rem;
+        margin-top: 12px;
+        display: inline-block;
+      }
+
+      .price-tag::after {
+        content: attr(data-type);
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-left: 4px;
+      }
+
+      .no-results {
+        background: white;
+        border-radius: var(--radius-md);
+        padding: 40px;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+      }
+
+      .no-results i {
+        font-size: 48px;
+        color: var(--primary);
+        margin-bottom: 16px;
+        opacity: 0.8;
+      }
+
+      .no-results h4 {
+        color: var(--dark);
+        margin-bottom: 8px;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .no-results p {
+        color: var(--text-secondary);
+        margin-bottom: 0;
+        font-size: 0.95rem;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .parking-spot {
+        animation: fadeInUp 0.4s ease-out forwards;
+        opacity: 0;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .filter-container {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+
+      /* Select2 Customization */
+      .select2-container .select2-selection--single {
+        height: 38px;
+        border: 1px solid #e0e5ee;
+        border-radius: var(--radius-sm);
+      }
+
+      .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px;
+        padding-left: 12px;
+      }
+
+      .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px;
+      }
+
+      .select2-dropdown {
+        border: 1px solid #e0e5ee;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-md);
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="~{fragments/navbarLanding :: navbarLanding}"></div>
+
+    <div class="container">
+      <!-- Compact Search Panel -->
+      <div class="search-panel">
+        <form th:action="@{/spots/search}" method="get" id="searchForm">
+          <div class="filter-container">
+            <div class="filter-item">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <select name="city" id="citySelect" class="form-select">
+                  <option value="">Select City</option>
+                  <option
+                    th:each="city : ${cities}"
+                    th:value="${city}"
+                    th:text="${city}"
+                    th:selected="${param.city == city}"
+                  ></option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-item">
+              <div class="form-group">
+                <label class="form-label">Vehicle Type</label>
+                <select name="supportedVehicleType" class="form-select">
+                  <option value="">All Vehicles</option>
+                  <option
+                    th:each="type : ${vehicleTypes}"
+                    th:value="${type}"
+                    th:text="${type}"
+                    th:selected="${param.supportedVehicleType == type}"
+                  ></option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-item" style="flex: 0 0 auto;">
+              <div class="form-group">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="search-btn">
+                  <i class="fas fa-search me-1"></i> Find Spots
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button type="button" class="advanced-toggle" id="advancedToggle">
+              <i class="fas fa-sliders-h me-1"></i> Advanced Options
+            </button>
+          </div>
+
+          <div class="advanced-filters" id="advancedFilters" style="display: none">
+            <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <label class="form-label">EV Charging</label>
+                <select name="hasEVCharging" class="form-select">
+                  <option value="">All</option>
+                  <option value="true" th:selected="${param.hasEVCharging == 'true'}">Yes</option>
+                  <option value="false" th:selected="${param.hasEVCharging == 'false'}">No</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Spot Type</label>
+                <select name="spotType" class="form-select">
+                  <option value="">All Types</option>
+                  <option
+                    th:each="type : ${spotTypes}"
+                    th:value="${type}"
+                    th:text="${type}"
+                    th:selected="${param.spotType == type}"
+                  ></option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Availability</label>
+                <select name="status" class="form-select">
+                  <option value="">Any</option>
+                  <option
+                    th:each="st : ${status}"
+                    th:value="${st}"
+                    th:text="${st}"
+                    th:selected="${param.status == st}"
+                  ></option>
+                </select>
+              </div>
+            </div>
+
+            <div th:if="${user != null and user.userType.toString() == 'ADMIN'}" class="action-buttons mt-3">
+              <div class="row g-2">
+                <div class="col">
+                  <a href="/spots/by-booking" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fas fa-ticket-alt"></i> Search by Booking Id
+                  </a>
+                </div>
+                <div class="col">
+                  <a href="/spots/booked" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fas fa-history"></i> All Booked Spots
+                  </a>
+                </div>
+                <div class="col">
+                  <a href="/spots/search-by-date" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fa-solid fa-calendar-days"></i> Search By Start & End Date
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Results Section -->
+      <div
+        th:if="${spots != null and #arrays.length(spots) > 0}"
+        class="parking-grid"
+      >
+        <div th:each="spot, spotStat : ${spots}" class="parking-spot" style="animation-delay: ${spotStat.index * 0.05}s">
+          <div
+            class="card"
+            th:data-url="@{/spots/details/{spotId}(spotId=${spot.spotId})}"
+            th:attr="onclick=${user != null and user.userType.toString()=='VEHICLE_OWNER'?'redirectToBooking(this)' : null}"
+          >
+            <div class="card-img-wrapper">
+              <div
+                th:class="${spot.status == 'AVAILABLE' ? 'status-badge status-available' : 'status-badge status-occupied'}"
+                th:text="${spot.status}"
+              ></div>
+              <img
+                th:if="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}"
+                th:src="${spot.spotImage}"
+                alt="Spot Image"
+              />
+              <img
+                th:unless="${spot.spotImage != null and not #strings.isEmpty(spot.spotImage)}"
+                src="/images/default-parking.jpg"
+                alt="Default Parking Image"
+              />
+            </div>
+            <div class="card-body">
+              <h5 class="card-title" th:text="${spot.spotNumber}">
+                Spot Number
+              </h5>
+              <div class="card-info">
+                <div class="info-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span
+                    th:text="${spot.location.city + ', ' + spot.location.streetAddress}"
+                  ></span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-charging-station"></i>
+                  <span
+                    th:text="${spot.hasEVCharging ? 'EV Charging Available' : 'No EV Charging'}"
+                  ></span>
+                </div>
+                <span
+                  class="price-tag"
+                  th:text="${'₹'+spot.price}"
+                  th:data-type="${spot.priceType}"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        th:if="${spots == null or #arrays.length(spots) == 0}"
+        class="no-results"
+      >
+        <i class="fas fa-map-marker-slash"></i>
+        <h4>No matching spots found</h4>
+        <p>Try adjusting your filters or search in a different area.</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#citySelect").select2({
+          placeholder: "Search for a city",
+          allowClear: true,
+          width: "100%",
+        });
+
+        // Advanced filters toggle
+        $("#advancedToggle").click(function() {
+          $("#advancedFilters").slideToggle(200);
+          $(this).find("i").toggleClass("fa-sliders-h fa-chevron-up");
+        });
+
+        // Add staggered animation to cards
+        $(".parking-spot").each(function(index) {
+          $(this).css({
+            "animation-delay": (index * 0.05) + "s"
+          });
+        });
+      });
+
+      function redirectToBooking(element) {
+        let url = element.getAttribute("data-url");
+        if (url) {
+          window.location.href = url;
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Admin Contact Messages</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        /* background: linear-gradient(
+          135deg,
+          #1fa3d4,
+          #86c7e2,
+          #206f91,
+          #5b879f,
+          #a4c1ca
+        ); */
+        background-color: #fff;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h2 {
+        text-align: center;
+        color: black;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      thead {
+        background: #1fa3d4;
+        color: white;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #f9f9f9;
+      }
+
+      /* Button styles */
+      .reply-btn,
+      .delete-btn {
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+
+      /* Default Reply Button Color */
+      .reply-btn {
+        background-color: #ffe494;
+        color: #333;
+      }
+
+      /* After Clicking Reply */
+      .reply-btn.replied {
+        background-color: #a8f387;
+      }
+
+      /* Delete Button */
+      .delete-btn {
+        background-color: #ff5f81;
+        color: white;
+      }
+
+      /* Icons */
+      .icon {
+        font-size: 16px;
+        margin-right: 5px;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 85px;
+        right: 20px;
+        background-color: #ff5f81;
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        transition: background 0.3s;
+      }
+
+      .back-btn i {
+        margin-right: 5px;
+      }
+
+      .back-btn:hover {
+        background-color: #ff3b60;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="javascript:history.back()" class="back-btn">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+    <h2>USER QUERIES</h2>
+    <div class="mb-3" th:if="${success != null}">
+      <div class="valid-feedback d-block">
+        <i class="bi bi-check-circle-fill me-1"></i> [[${success}]]
+      </div>
+    </div>
+
+    <div class="mb-3" th:if="${error != null}">
+      <div class="invalid-feedback d-block">
+        <i class="bi bi-exclamation-circle-fill me-1"></i> [[${error}]]
+      </div>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="categoryFilter" style="font-weight: bold; color: #1fa3d4; margin-right: 10px;">Filter</label>
+      <select id="categoryFilter" onchange="filterMessages()" style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="ALL">All</option>
+        <option value="FRAUD">FRAUD</option>
+        <option value="ERROR">ERROR</option>
+        <option value="OTHER">OTHER</option>
+      </select>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Category</th>
+          <th>Message</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="msg : ${messages}" th:id="'row-' + ${msg.id}" th:attr="data-category=${msg.category}">
+          <td th:text="${msg.id}"></td>
+          <td th:text="${msg.name}"></td>
+          <td th:text="${msg.email}"></td>
+          <td th:text="${msg.category}"></td>
+          <td th:text="${msg.message}"></td>
+          <td>
+            <!-- Reply Button -->
+            <button
+              class="reply-btn"
+              th:data-email="'mailto:' + ${msg.email} + '?subject=RESPONSE TO YOUR QUERY ID: ' + ${msg.id} + ' - SMART PARK'"
+              th:data-id="${msg.id}"
+            >
+              <i class="bi bi-envelope"></i>
+            </button>
+
+            <!-- Delete Button -->
+            <a
+              class="delete-btn"
+              th:href="@{/contact/delete/{id}(id=${msg.id})}"
+              onclick="return confirm('Are you sure you want to delete this message?');"
+            >
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      function filterMessages() {
+    const selected = document.getElementById("categoryFilter").value;
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach((row) => {
+      const category = row.getAttribute("data-category");
+      row.style.display = (selected === "ALL" || category === selected) ? "" : "none";
+    });
+  }
+  window.onload = filterMessages;
+  // Keep existing reply button logic
+  document.querySelectorAll(".reply-btn").forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
+      const emailLink = this.getAttribute("data-email");
+      window.open(emailLink, "_blank");
+      this.classList.add("replied");
+    });
+  });
+  
+    </script>
+  </body>
+</html>

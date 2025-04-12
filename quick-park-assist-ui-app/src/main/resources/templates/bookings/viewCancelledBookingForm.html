@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Cancelled Bookings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <!-- <h2 class="text-2xl font-semibold text-gray-700 text-center mb-4">Enter Contact Number</h2> -->
+
+        <form action="/ui/booking/cancelledBookings" method="get" class="flex flex-col">
+            <!-- <input type="text" name="contactNumber" placeholder="Enter your contact number"
+                class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" required />
+            <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                🔍 Search
+            </button> -->
+            <div class="mt-6 text-center">
+                <a th:href="@{/ui/booking/home}" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back to Home</a>
+            </div>
+        </form>
+
+        
+    </div>
+
+
+    <!-- JavaScript for displaying popup alert -->
+    <script th:if="${error != null}" th:inline="javascript">
+        alert('[[${error}]]');
+    </script>
+</body>
+</html>

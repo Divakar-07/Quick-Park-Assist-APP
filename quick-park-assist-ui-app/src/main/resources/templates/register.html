@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+	  background-image: url("../images/background.jpg"); /* Add a background image */
+	  background-color: rgb(254, 231, 211);
+	  background-blend-mode: overlay;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .register-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ffa500;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: darkorange;
+    }
+
+    .login-link {
+      display: block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: blue;
+    }
+
+    .login-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Register</h2>
+    <form th:action="@{/register}" method="post" th:object="${registerDTO}">
+      <label for="username">Username:</label>
+      <input type="text" th:field="*{username}" required>
+
+      <label for="password">Password:</label>
+      <input type="password" th:field="*{password}" required>
+
+      <label for="role">Select Role:</label>
+      <select th:field="*{roles}">
+          <option th:value="ROLE_SPOT_OWNER">Spot Owner</option>
+          <option th:value="ROLE_VEHICLE_OWNER">Vehicle Owner</option>
+          <option th:value="ROLE_ADMIN">Admin</option>
+      </select>
+
+      <button type="submit">Register</button>
+    </form>
+    <a class="login-link" th:href="@{/login}">Already have an account? Login here</a>
+    <div th:if="${error}" class="error-message" style="color: red;">
+      <p th:text="${error}"></p>
+    </div>
+  </div>
+</body>
+</html>

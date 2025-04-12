@@ -1,0 +1,135 @@
+.section-divider {
+  border: 0; /* Removed default border */
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0);
+  margin: 5px 0;
+}
+
+/* dashboard */
+
+/* Global Styling */
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(to right, #4adede, #1aa7ec, #1ca7ec, #1f2f98);
+  color: white;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  background: rgba(31, 47, 152, 0.9);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.profile-section {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  border: 3px solid white;
+  object-fit: cover;
+  object-position: center;
+}
+
+.nav-link {
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.nav-link i {
+  margin-right: 8px;
+}
+
+.nav-link:hover {
+  background: #1ca7ec;
+  border-radius: 5px;
+}
+.nav-link.active{
+  background: #1ca7ec;
+}
+
+/* Main Content */
+.main-content {
+  padding: 40px;
+}
+
+.dashboard-title {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.booking-card {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1f2f98;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.booking-card:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.btn-primary {
+  background: #1aa7ec;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #1f2f98;
+}
+
+/* dashboard */
+
+/* Custom CSS for White Icons  */
+.social-icon {
+  transition: all 0.3s ease;
+  padding: 8px;
+}
+
+.social-icon:hover {
+  transform: translateY(-3px);
+  opacity: 0.8;
+}
+
+/* For X (Twitter) icon color */
+.fa-x-twitter,
+.bi-twitter-x {
+  color: white;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+.fa-x-twitter:hover,
+.bi-twitter-x:hover {
+  color: #000 !important; /* X logo's black color */
+  transform: scale(1.1);
+}
+
+/* Facebook icon color */
+.fa-facebook:hover {
+  color: #1877f2 !important;
+}
+
+/* Instagram icon color */
+.fa-instagram:hover {
+  color: #e4405f !important;
+}
+
+.edit-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}

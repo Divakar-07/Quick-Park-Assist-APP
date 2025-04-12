@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SMART PARK</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/faq.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="content-container">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light bg-opacity-75">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="#">
+                <img src="/images/download (5).png" alt="Logo" width="150">
+            </a>
+
+            <!-- Navbar Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="#HIT">How It Works</a>
+                    </li>
+                    <!-- Dropdown Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-black" href="#Service" id="servicesDropdown" role="button" data-bs-toggle="dropdown">Our Service</a>
+                        <ul class="dropdown-menu">
+                            <li><button onclick="window.location.href='/auth/login'" class="dropdown-item">Smart Spots</button></li>
+                            <li><button onclick="window.location.href='/auth/login'" class="dropdown-item">Booking</button></li>
+                            <li><button onclick="window.location.href='/auth/login'" class="dropdown-item">Payment</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black" href="/contact">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Get Started Button -->
+            <button onclick="window.location.href='/auth/login'" class="btn btn-primary d-none d-md-inline-block">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Slider -->
+<section class="hero-section">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000"> 
+
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="background-image: url('/images/women.webp');">
+                <div class="carousel-caption">
+                    <h1>Save Time and Effort</h1>
+                    <p>With Smart Park Assist, you can book your parking spot in advance, eliminating the need to circle the block searching for an available space. Reclaim your time and reduce your stress levels.</p>
+                    <a href="/auth/login" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+            <div class="carousel-item" style="background-image: url('/images/registration-3960205_1280.jpg');">
+                <div class="carousel-caption">
+                    <h1>User-Friendly Interface</h1>
+                    <p>Our platform is designed with simplicity in mind. The intuitive interface makes it easy for anyone to book and manage their parking reservations, regardless of their technical expertise.</p>
+                    <a href="/auth/login" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+            <div class="carousel-item" style="background-image: url('/images/laptop-2838918_1280.jpg');">
+                <div class="carousel-caption">
+                    <h1>Manage Bookings Easily</h1>
+                    <p>Smart Park Assist allows you to view and manage all your parking bookings in one convenient location. Modify or cancel bookings with ease, giving you complete control over your parking arrangements.</p>
+                    <a href="/auth/login" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left and Right Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- Future Transparent Container Example -->
+<section class="container mt-5">
+    <div class="transparent-box p-4">
+        <div class="row align-items-center">
+            <!-- Left Side: Image -->
+            <div class="col-md-4 text-center">
+                <img src="/images/d3.png" alt="Valet Parking" class="left-image">
+            </div>
+            <!-- Right Side: Text Content -->
+            <div class="col-md-8">
+                <h2>Effortless Parking, Exceptional Service</h2>
+                <p>Experience the ultimate convenience with our professional valet service.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Divider -->
+<hr class="section-divider">
+
+<!-- About Section -->
+<section id="about" class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Side: Tabs and Content -->
+            <div class="col-md-6">
+                <h3>About Us</h3>
+                
+                <!-- Tabs -->
+                <ul class="nav nav-tabs mt-3" id="aboutTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company" role="tab">
+                            Our Objective
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="mission-tab" data-bs-toggle="tab" data-bs-target="#mission" role="tab">
+                            Our Mission
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="vision-tab" data-bs-toggle="tab" data-bs-target="#vision" role="tab">
+                            Our Vision
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content mt-3">
+                    <!-- Our Company Tab -->
+                    <div class="tab-pane fade show active" id="company" role="tabpanel">
+                        <h4>Objective</h4>
+                        <p>"Smart Park addresses the common challenges of urban parking—limited availability, manual booking, and lack of real-time information—by providing a smart, digital platform that allows users to seamlessly register, book parking spots, manage vehicles, and make secure payments. The system eliminates the hassle of searching for parking, reduces congestion, and enhances the overall user experience through automation and convenience."</p>
+                        <button onclick="window.location.href='/login'" class="btn btn-primary">Learn More</button>
+                    </div>
+
+                    <!-- Our Mission Tab -->
+                    <div class="tab-pane fade" id="mission" role="tabpanel">
+                        <h4>Our Mission</h4>
+                        <p>Our mission is to lead the way in smart mobility by delivering next-generation parking solutions that combine innovation, sustainability, and a customer-first approach.</p>
+                        <button onclick="window.location.href='/login'" class="btn btn-primary">Learn More</button>
+                    </div>
+
+                    <!-- Our Vision Tab -->
+                    <div class="tab-pane fade" id="vision" role="tabpanel">
+                        <h4>Our Vision</h4>
+                        <p>We envision a future where technology and innovation drive success, creating a positive impact globally.</p>
+                        <button onclick="window.location.href='/login'" class="btn btn-primary">Learn More</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Image -->
+            <div class="col-md-6 text-center">
+                <img src="/images/team.webp" alt="About Us" class="about-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="HIT" class="how-it-works">
+    <div class="container">
+        <h2 class="mb-5">How SmartPark Works</h2>
+
+        <div class="row g-4">
+            <!-- Step 1: User Login -->
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="fas fa-user"></i>
+                    <h4>Step 1: Login</h4>
+                    <p>Create an account or log in to access SmartPark's features.</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Book Parking -->
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="fas fa-car"></i>
+                    <h4>Step 2: Book a Parking Spot</h4>
+                    <p>Choose your preferred parking spot and confirm your booking.</p>
+                </div>
+            </div>
+
+            <!-- Step 3: Manage Booking -->
+            <div class="col-md-4">
+                <div class="step-box">
+                    <i class="fas fa-tasks"></i>
+                    <h4>Step 3: Manage Your Booking</h4>
+                    <p>Modify or cancel your booking easily through your dashboard.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Now Button -->
+        <button onclick="window.location.href='/auth/login'" class="btn btn-primary login-btn">Login Now</button>
+    </div>
+</section>
+
+<!-- Our Services Section -->
+<section id="Service" class="services-section">
+    <div class="container">
+        <!-- Main Heading -->
+        <h2 class="mb-3">Our Services</h2>
+        <p class="mb-5">We provide seamless and secure parking solutions, ensuring a hassle-free experience. Our services include automated parking, valet assistance, and electric vehicle charging, making urban mobility more efficient and sustainable.</p>
+
+        <div class="row g-4">
+            <!-- Service 1 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-parking"></i>
+                    <h4>Automated Parking</h4>
+                    <p>Enjoy a stress-free parking experience with our AI-driven automated parking system.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-car"></i>
+                    <h4>Valet Parking</h4>
+                    <p>Our professional valet service ensures safe and convenient parking for your vehicle.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+
+            <!-- Service 3 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Secure Parking</h4>
+                    <p>Advanced security systems and surveillance to keep your vehicle safe 24/7.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+
+            <!-- Service 4 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-charging-station"></i>
+                    <h4>EV Charging Stations</h4>
+                    <p>Fast and reliable EV charging stations for electric vehicle owners on the go.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+
+            <!-- Service 5 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h4>Spot Reservation</h4>
+                    <p>Reserve your parking spot in advance to save time and avoid last-minute hassles.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+
+            <!-- Service 6 -->
+            <div class="col-md-4">
+                <div class="service-box">
+                    <i class="fas fa-credit-card"></i>
+                    <h4>Cashless Payments</h4>
+                    <p>Convenient and secure online payment options for a seamless parking experience.</p>
+                    <a href="#" class="btn btn-primary read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section -->
+<section class="testimonial-section">
+    <div class="testimonial-container">
+        <h2 class="UT">Our User Testimonials</h2>
+        <!-- Row 1 -->
+        <div class="testimonial-row" id="row1">
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user1.png" alt="User 1"></div>
+                <div class="contentBx">
+                    <h2>Aryan Mehta</h2>
+                    <p class="designation">Frequent Traveler</p>
+                    <p class="review">"Smoothest parking experience ever!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user2.jpg" alt="User 2"></div>
+                <div class="contentBx">
+                    <h2>Priya Sharma</h2>
+                    <p class="designation">Daily Commuter</p>
+                    <p class="review">"No more parking hassles—super convenient! 💖🌟"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/elon.jpg" alt="User 3"></div>
+                <div class="contentBx">
+                    <h2>Elon Smith</h2>
+                    <p class="designation">Regular User</p>
+                    <p class="review">“EV charging stations are 🔥. Super fast, ultra-reliable.”</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user4.jpg" alt="User 4"></div>
+                <div class="contentBx">
+                    <h2>Rohit Bansal</h2>
+                    <p class="designation">Weekend Shopper</p>
+                    <p class="review">"Saved so much time, love it!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user5.jpg" alt="User 5"></div>
+                <div class="contentBx">
+                    <h2>Kevin Brown</h2>
+                    <p class="designation">Fitness Trainer</p>
+                    <p class="review">"Quick parking near my gym—amazing!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/Drump.jpg" alt="User 6"></div>
+                <div class="contentBx">
+                    <h2>Donald John</h2>
+                    <p class="designation">Happy Customer</p>
+                    <p class="review">“Listen, folks, Quick Park Assist—absolutely tremendous!”</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user7.jpg" alt="User 7"></div>
+                <div class="contentBx">
+                    <h2>Ahmed Khan</h2>
+                    <p class="designation">Delivery Partner</p>
+                    <p class="review">	"Fast and reliable for my daily routes!"</p>
+                </div>
+            </div>
+          <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user8.jpg" alt="User 8"></div>
+                <div class="contentBx">
+                    <h2>Laura Green</h2>
+                    <p class="designation">Working Mother</p>
+                    <p class="review">"Makes my daily commute stress-free!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/kim.jpg" alt="User 9"></div>
+                <div class="contentBx">
+                    <h2>Jong Kim</h2>
+                    <p class="designation">Frequent Traveler</p>
+                    <p class="review">“BOOM💥 The valet service is fantastic!”</p>
+                </div>
+            </div> 
+        </div>
+
+        <!-- Row 2 (Reverse) -->
+        <div class="testimonial-row reverse" id="row2">
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/userA.jpg" alt="User 1"></div>
+                <div class="contentBx">
+                    <h2>Rahul Soni</h2>
+                    <p class="designation">Parking Enthusiast</p>
+                    <p class="review">“Seamless parking experience every time!”</p>
+                </div>
+            </div>
+          <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user2.jpg" alt="User 2"></div>
+                <div class="contentBx">
+                    <h2>Ananya Verma</h2>
+                    <p class="designation">Happy Customer</p>
+                    <p class="review">"Quick, safe, and easy parking solution!"</p>
+                </div>
+            </div>
+          <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/userB.jpeg" alt="User 3"></div>
+                <div class="contentBx">
+                    <h2>Vikram Singh</h2>
+                    <p class="designation">Tech Enthusiast</p>
+                    <p class="review">	"Seamless booking, flawless execution!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/u5.jpg" alt="User 4"></div>
+                <div class="contentBx">
+                    <h2>Daniel Park</h2>
+                    <p class="designation">Daily Commuter</p>
+                    <p class="review">“Best parking solution I've ever used.”</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/userP.jpg" alt="User 5"></div>
+                <div class="contentBx">
+                    <h2>Raj Malhotra</h2>
+                    <p class="designation">	Event Organizer</p>
+                    <p class="review">	"Perfect for hassle-free parking during events!"</p>
+                </div>
+            </div>
+          <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user1.png" alt="User 6"></div>
+                <div class="contentBx">
+                    <h2>Harsh Tiwari</h2>
+                    <p class="designation">Sales Manager</p>
+                    <p class="review">"Saves me time every single day!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/userDS.png" alt="User 7"></div>
+                <div class="contentBx">
+                    <h2>Divakar Sharma</h2>
+                    <p class="designation">College Student</p>
+                    <p class="review">	"Affordable and stress-free!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user7.jpg" alt="User 8"></div>
+                <div class="contentBx">
+                    <h2>Suresh Nair</h2>
+                    <p class="designation">Bank Manager</p>
+                    <p class="review">"Highly secure and reliable service!"</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="imgBx"><img src="/images/user8.jpg" alt="User 9"></div>
+                <div class="contentBx">
+                    <h2>Emily Watson</h2>
+                    <p class="designation">Travel Blogger</p>
+                    <p class="review">"Great experience, even in busy areas!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row">
+            <!-- About Section -->
+            <div class="col-md-3">
+                <h5>Smart Park Assist</h5>
+                <p>Effortless parking with exceptional service. Reserve your spot and enjoy seamless parking.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-3">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-light text-decoration-none">Home</a></li>
+                    <li><a href="#about" class="text-light text-decoration-none">About Us</a></li>
+                    <li><a href="#Service" class="text-light text-decoration-none">Services</a></li>
+                    <li><a href="/contact" class="text-light text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-md-3">
+                <h5>Contact Us</h5>
+                <p>Email: support@quickpark.com</p>
+                <p>Phone: +91 92345 67890</p>
+            </div>
+
+            <!-- Social Media Links -->
+            <div class="col-md-3">
+                <h5>Follow Us</h5>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="https://twitter.com/" class="text-light fs-4"><i class="bi bi-twitter-x"></i></a>
+                    <a href="https://www.facebook.com/" class="text-light fs-4"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/" class="text-light fs-4"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-3">
+            <p class="mb-0">&copy; 2025 Smart Park Assist. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- FAQ section bot DIV -->
+    <div class="faq-icon" id="faqIcon" title="Click to chat 🤖">🤖</div>
+
+    <!-- FAQ chat window -->
+    <div class="faq-chat" id="faqChat">
+        <div class="faq-header">
+            Hi,👋🏼 I am DIV what's your question? 
+            <span onclick="closeFAQ()"><i class="bi bi-x-circle"></i></span>
+        </div>
+        <div class="faq-body">
+            <div id="responseArea"></div>
+        </div>
+        <div class="faq-input">
+            <input type="text" id="questionInput" placeholder="Write your question...">
+            <button onclick="submitQuestion()">Send</button>
+        </div>
+    </div>
+
+<!-- JavaScript included within <script> tag -->
+    <script>
+
+        let icon = document.getElementById("faqIcon");
+        let chat = document.getElementById("faqChat");
+        let offsetX = 0, offsetY = 0, isDragging = false;
+    
+        // Start dragging
+        icon.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        offsetX = e.clientX - icon.offsetLeft;
+        offsetY = e.clientY - icon.offsetTop;
+        icon.style.cursor = "grabbing";
+        });
+    
+        // Dragging in motion
+        document.addEventListener("mousemove", (e) => {
+          if (isDragging) {
+            let x = e.clientX - offsetX;
+            let y = e.clientY - offsetY;
+            icon.style.left = x + "px";
+            icon.style.top = y + "px";
+            icon.style.bottom = "auto"; // cancel default bottom-right
+            icon.style.right = "auto";
+          }
+        });
+    
+        // Stop dragging
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+          icon.style.cursor = "grab";
+        });
+    
+        // Open FAQ near the icon
+        icon.addEventListener("click", () => {
+          chat.style.display = "block";
+          // Position chat relative to icon
+          const iconRect = icon.getBoundingClientRect();
+          chat.style.left = iconRect.left + "px";
+          chat.style.top = (iconRect.top + 60) + "px"; // place just below icon
+        });
+    
+        function closeFAQ() {
+          chat.style.display = "none";
+          document.getElementById("questionInput").value = '';
+          document.getElementById("responseArea").innerText = '';
+        }
+    
+            // Function to submit the question to the backend
+            async function submitQuestion() {
+                const question = document.getElementById('questionInput').value.trim();
+                if (!question) {
+                    alert('Please enter a question.');
+                    return;
+                }
+    
+                try {
+                    const response = await fetch('http://localhost:8081/faq', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ question: question })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error("Failed to get response");
+                    }
+    
+                    const answer = await response.text();
+                    document.getElementById('responseArea').innerText = answer;
+                    document.getElementById('questionInput').value = ''; // Clear input after submission
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('responseArea').innerText = 'Error: Could not fetch response. Please try again.';
+                }
+            }
+    
+            // Allow pressing Enter to submit the question
+            document.getElementById('questionInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    submitQuestion();
+                }
+            });
+        </script>
+
+<script src="/js/script.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

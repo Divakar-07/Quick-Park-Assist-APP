@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Booking - Quick Park Assist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-lg mx-auto bg-white p-6 rounded shadow-md mt-10">
+        <h2 class="text-2xl font-bold text-center text-blue-600">Update Booking</h2>
+
+        <!-- Error Message Display -->
+        <div th:if="${error}" class="mt-4 p-3 bg-red-100 text-red-800 rounded">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Success Message Display -->
+        <div th:if="${message}" class="mt-4 p-3 bg-green-100 text-green-800 rounded">
+            <span th:text="${message}"></span>
+        </div>
+
+        <!-- Fetch Booking Form -->
+        <form th:action="@{/ui/booking/update}" method="get" class="mt-4">
+            <label class="block font-semibold">Enter Booking ID:</label>
+            <input type="text" name="bookingId" required class="w-full p-2 border rounded">
+            <button type="submit" class="w-full mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Fetch Booking
+            </button>
+        </form>
+
+        <!-- Update Booking Form (Visible After Fetching) -->
+        <form th:if="${booking}" th:action="@{/ui/booking/update}" method="post" class="mt-4" onsubmit="return validateUpdate()">
+            <!-- Hidden Booking ID -->
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold">Booking ID:</label>
+                    <input type="text" th:value="${booking.bookingId}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Spot ID:</label>
+                    <input type="text" th:value="${booking.spotInfo.spotId}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Registration Number:</label>
+                    <input type="text" th:value="${booking.vehicle.registrationNumber}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Start Date:</label>
+                    <input type="text" id="startDate" th:value="${booking.startDate}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Start Time:</label>
+                    <input type="text" id="startTime" th:value="${booking.startTime}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Current End Date:</label>
+                    <input type="text" th:value="${booking.endDate}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+                <div>
+                    <label class="block font-semibold">Current End Time:</label>
+                    <input type="text" th:value="${booking.endTime}" readonly class="w-full p-2 border rounded bg-gray-200">
+                </div>
+            </div>
+
+            <!-- Editable Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label class="block font-semibold">New End Date:</label>
+                    <input type="date" id="newEndDate" name="newEndDate" required class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold">New End Time:</label>
+                    <input type="time" id="newEndTime" name="newEndTime" required class="w-full p-2 border rounded">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full mt-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Update Booking
+            </button>
+        </form>
+
+        <!-- Return to Home Button -->
+        <a th:href="@{/ui/booking/home}" class="block mt-4 text-center text-blue-500 hover:underline">
+            Return to Home
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const startDateInput = document.getElementById("startDate");
+            const newEndDateInput = document.getElementById("newEndDate");
+
+            if (startDateInput && newEndDateInput) {
+                const startDateStr = startDateInput.value;
+                if (startDateStr) {
+                    newEndDateInput.min = startDateStr;
+                }
+            }
+        });
+
+        function validateUpdate() {
+            const startDateStr = document.getElementById("startDate").value;
+            const startTimeStr = document.getElementById("startTime").value;
+            const newEndDateStr = document.getElementById("newEndDate").value;
+            const newEndTimeStr = document.getElementById("newEndTime").value;
+
+            if (!newEndDateStr || !newEndTimeStr) {
+                alert("❌ New End Date and Time are required.");
+                return false;
+            }
+
+            const startDate = new Date(startDateStr);
+            const newEndDate = new Date(newEndDateStr);
+            
+            const startTimeParts = startTimeStr.split(":");
+            const newEndTimeParts = newEndTimeStr.split(":");
+            const startTime = new Date(0, 0, 0, startTimeParts[0], startTimeParts[1]);
+            const newEndTime = new Date(0, 0, 0, newEndTimeParts[0], newEndTimeParts[1]);
+
+            if (newEndDate < startDate || (newEndDate.getTime() === startDate.getTime() && newEndTime <= startTime)) {
+                alert("❌ New end date and time must be after the start date and time.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!-- view-addon.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Add-Ons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+  </head>
+  <body class="bg-gray-100 flex">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-64 bg-blue-900 text-white h-screen p-5 transition-all duration-300"
+    >
+      <h1 class="text-2xl font-bold mb-5">Admin Panel</h1>
+      <nav>
+        <ul>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard')"
+          >
+            <span class="material-icons">dashboard</span> Dashboard
+          </li>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard/reports')"
+          >
+            <span class="material-icons">bar_chart</span> Reports
+          </li>
+          <li
+            onclick="navigateTo('/dashboard/parking-spot')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">local_parking</span> Parking Spots
+          </li>
+          <li
+            onclick="navigateTo('/admin/contact-messages')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">bar_chart</span> User Query
+          </li>
+          <li class="mb-3 flex flex-col">
+            <div
+              class="flex items-center justify-between gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+              onclick="toggleDropdown(event)"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-icons">extension</span> ADD-ON
+              </div>
+              <span
+                id="dropdownIcon"
+                class="material-icons transition-all duration-300"
+                >expand_more</span
+              >
+            </div>
+
+            <!-- Dropdown inside sidebar -->
+            <ul
+              id="addonDropdown"
+              class="hidden flex flex-col mt-1 bg-blue-800 rounded-lg"
+            >
+              <li
+                onclick="navigateTo('/addons/view-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>View ADD-ONs</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/new-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>New ADD-ON</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/status')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>Status ADD-ON</p>
+              </li>
+            </ul>
+          </li>
+
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <form action="/auth/logout" method="post">
+              <button class="flex items-center gap-2">
+                <span class="material-icons">logout</span> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <header
+        class="flex justify-between items-center bg-white p-4 rounded shadow"
+      >
+        <h2 class="text-xl font-bold">All Add-Ons</h2>
+      </header>
+      <!-- Filter Section -->
+      <div class="bg-white p-4 rounded shadow mt-6 mb-4">
+        <div
+          th:if="${message}"
+          th:text="${message}"
+          class="text-green-600 font-medium mb-4"
+        ></div>
+
+        <form class="flex flex-wrap gap-6 items-end" id="searchForm">
+          <!-- Vehicle Type -->
+          <div class="flex flex-col">
+            <label
+              for="vehicleType"
+              class="font-semibold mb-1 flex items-center gap-1"
+            >
+              <span class="material-icons text-blue-600">directions_car</span>
+              Vehicle Type
+            </label>
+            <select
+              id="vehicleType"
+              name="vehicleType"
+              class="border border-gray-300 rounded px-4 py-2 w-52 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option
+                value="All"
+                th:selected="${vehicleType == null or !#lists.contains(vehicleTypes, vehicleType)}"
+              >
+                All
+              </option>
+              <th:block th:each="type : ${vehicleTypes}">
+                <option
+                  th:value="${type}"
+                  th:text="${type}"
+                  th:selected="${vehicleType != null and vehicleType == type}"
+                >
+                  >
+                </option>
+              </th:block>
+            </select>
+          </div>
+
+          <!-- Add-On ID -->
+          <div class="flex flex-col">
+            <label
+              for="addOnId"
+              class="font-semibold mb-1 flex items-center gap-1"
+            >
+              <span class="material-icons text-blue-600">tag</span> Add-On ID
+            </label>
+            <input
+              type="Number"
+              id="addOnId"
+              name="addOnId"
+              placeholder="Enter ID"
+              class="border border-gray-300 rounded px-4 py-2 w-52 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <!-- Search Button -->
+          <div class="mt-2">
+            <button
+              type="submit"
+              id="searchBtn"
+              class="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            >
+              <span class="material-icons">search</span> Search
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="mt-6">
+        <table class="min-w-full border border-gray-300 shadow-md rounded-lg">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2 border">ID</th>
+              <th class="px-4 py-2 border">Name</th>
+              <th class="px-4 py-2 border">Description</th>
+              <th class="px-4 py-2 border">Price</th>
+              <th class="px-4 py-2 border">Supported Vehicles</th>
+              <th class="px-4 py-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="addon : ${addons}" class="text-center">
+              <td class="px-4 py-2 border" th:text="${addon.addOnId}">1</td>
+              <td class="px-4 py-2 border" th:text="${addon.name}">Sunroof</td>
+              <td class="px-4 py-2 border" th:text="${addon.description}">
+                Extra Feature
+              </td>
+              <td class="px-4 py-2 border" th:text="${addon.price}">500</td>
+              <td class="px-4 py-2 border" th:text="${addon.vehicleType}">
+                TWO WHEELER
+              </td>
+              <td class="px-4 py-2 border">
+                <a
+                  th:href="@{'/addons/editAddon/' + ${addon.addOnId}}"
+                  class="text-blue-600 hover:underline"
+                  >Edit</a
+                >
+                |
+                <a
+                  th:href="@{'/addons/deleteAddon/' + ${addon.addOnId}}"
+                  class="text-red-600 hover:underline"
+                  >Delete</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("searchForm").onsubmit = (e) => {
+        e.preventDefault();
+        const addOnId = document.getElementById("addOnId");
+        if (addOnId.value !== "") {
+          const id = parseInt(addOnId.value);
+          if (!isNaN(id)) {
+            navigateTo(`/addons/view-addon/${id}`);
+          } else {
+            console.error("Invalid AddOn ID");
+          }
+        }
+      };
+
+      const vehicleType = document.getElementById("vehicleType");
+      vehicleType.onchange = () => {
+        console.log(vehicleType.value);
+        if (vehicleType.value === "All") {
+          console.log("inside the all condition");
+          navigateTo("/addons/view-addon");
+        } else {
+          navigateTo(`/addons/view-addon?vehicleType=${vehicleType.value}`);
+        }
+      };
+      // Toggle Profile Dropdown
+      document
+        .getElementById("profileMenuBtn")
+        .addEventListener("click", function () {
+          document.getElementById("profileMenu").classList.toggle("hidden");
+        });
+      function navigateTo(route) {
+        window.location.assign(route);
+      }
+      function toggleDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById("addonDropdown");
+        const icon = document.getElementById("dropdownIcon");
+
+        dropdown.classList.toggle("hidden");
+
+        // Toggle arrow direction
+        if (dropdown.classList.contains("hidden")) {
+          icon.textContent = "expand_more";
+        } else {
+          icon.textContent = "expand_less";
+        }
+      }
+
+      // Close dropdown when clicking anywhere else
+      document.addEventListener("click", function (event) {
+        let dropdown = document.getElementById("addonDropdown");
+        if (!dropdown.classList.contains("hidden")) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      document
+        .getElementById("addonDropdown")
+        .addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+    </script>
+  </body>
+</html>

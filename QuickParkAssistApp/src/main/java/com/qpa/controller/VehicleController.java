@@ -1,80 +1,80 @@
 package com.qpa.controller;
 
-
-import com.qpa.entity.Vehicle;
-import com.qpa.exception.InvalidEntityException;
-import com.qpa.service.UserService;
-import com.qpa.service.VehicleService;
-
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.qpa.dto.ResponseDTO;
+import com.qpa.entity.Vehicle;
+import com.qpa.entity.VehicleType;
+import com.qpa.exception.InvalidEntityException;
+import com.qpa.service.AuthService;
+import com.qpa.service.VehicleService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/vehicles")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
-    @Autowired private VehicleService vehicleService;
-    @Autowired private UserService userService;
+    private final VehicleService vehicleService;
+    private final AuthService authService;
 
-    @GetMapping("/new")
-    public String showAddForm(Model model) {
-        model.addAttribute("vehicle", new Vehicle());
-        model.addAttribute("users", userService.getAllUsers());
-        return "ADD_vehicle";
+    public VehicleController(VehicleService vehicleService, AuthService authService) {
+        this.vehicleService = vehicleService;
+        this.authService = authService;
     }
 
     @PostMapping("/save")
-    public String saveVehicle(@ModelAttribute("vehicle") Vehicle vehicle, RedirectAttributes ra) {
-        vehicleService.addVehicle(vehicle);
-        ra.addFlashAttribute("success", "Vehicle saved successfully!");
-        return "redirect:/";
+    public ResponseEntity<ResponseDTO<Void>> saveVehicle(@RequestBody Vehicle vehicle, HttpServletRequest request)
+            throws InvalidEntityException {
+        vehicleService.saveVehicle(vehicle, request);
+        return ResponseEntity.ok(new ResponseDTO<>("Vehicle registered successfully", 200, true, null));
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("vehicle", vehicleService.getVehicleById(id));
-        model.addAttribute("users", userService.getAllUsers());
-        return "ADD_vehicle";
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseDTO<Void>> deleteVehicle(@PathVariable Long id, HttpServletRequest request)
+            throws InvalidEntityException {
+        Long userId = authService.getUserId(request);
+        vehicleService.deleteVehicle(id, userId);
+        return ResponseEntity.ok(new ResponseDTO<>("Vehicle deleted successfully", 200, true, null));
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteVehicle(@PathVariable Long id, RedirectAttributes ra) {
-        vehicleService.deleteVehicle(id);
-        ra.addFlashAttribute("success", "Vehicle deleted successfully!");
-        return "redirect:/";
-    }
-
-    // Get Vehicle by ID 
     @GetMapping("/{id}")
     @ResponseBody
-    public Vehicle viewVehicleById(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public ResponseEntity<ResponseDTO<Vehicle>> viewVehicleById(@PathVariable Long id) throws InvalidEntityException {
+        Vehicle vehicle = vehicleService.getVehicleById(id);
+        return ResponseEntity.ok(new ResponseDTO<>("Vehicle fetched successfully", 200, true, vehicle));
     }
 
-    //Get Vehicles by Type 
     @GetMapping("/type/{vehicleType}")
     @ResponseBody
-    public List<Vehicle> viewVehiclesByType(@PathVariable String vehicleType) {
-        List<Vehicle> vehicles = vehicleService.getVehiclesByType(vehicleType);
-        if (vehicles.isEmpty()) {
-            throw new InvalidEntityException("No vehicles found for type: " + vehicleType);
-        }
-        return vehicles;
+    public ResponseEntity<ResponseDTO<List<Vehicle>>> viewVehiclesByType(@PathVariable String vehicleType)
+            throws InvalidEntityException {
+        VehicleType type = VehicleType.valueOf(vehicleType.toUpperCase());
+        List<Vehicle> vehicles = vehicleService.getVehiclesByType(type);
+        return ResponseEntity.ok(new ResponseDTO<>("Vehicles fetched successfully", 200, true, vehicles));
     }
 
-    @GetMapping("/registration/{registrationNumber}")
-    @ResponseBody
-    public Vehicle viewVehicleByRegistrationNumber(@PathVariable String registrationNumber) {
-        return vehicleService.getVehicleByRegistrationNumber(registrationNumber);
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<ResponseDTO<Vehicle>> getVehicleByBookingId(@PathVariable Long bookingId,
+            HttpServletRequest request) throws InvalidEntityException {
+        authService.isAuthenticated(request);
+        Vehicle vehicle = vehicleService.findByBookingId(bookingId);
+        return ResponseEntity.ok(new ResponseDTO<>("Vehicles fetched successfully", 200, true, vehicle));
     }
-	/*
-	addVehicle
-	viewVehicleById
-	viewVehicleByType
-		
-	 */
+
+    @GetMapping("/user")
+    public ResponseEntity<ResponseDTO<List<Vehicle>>> getUserVehicle(HttpServletRequest request) {
+        Long userId = authService.getUserId(request);
+        List<Vehicle> vehicles = vehicleService.findByUserId(userId);
+        return ResponseEntity.ok(new ResponseDTO<>("vehicles fetched successfully", 200, true, vehicles));
+    }
 }

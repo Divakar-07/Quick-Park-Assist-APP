@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Add Addon</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Material Icons CDN -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-64 bg-blue-900 text-white h-screen p-5 transition-all duration-300"
+    >
+      <h1 class="text-2xl font-bold mb-5">Admin Panel</h1>
+      <nav>
+        <ul>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard')"
+          >
+            <span class="material-icons">dashboard</span> Dashboard
+          </li>
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+            onclick="navigateTo('/dashboard/reports')"
+          >
+            <span class="material-icons">bar_chart</span> Reports
+          </li>
+          <li
+            onclick="navigateTo('/dashboard/parking-spot')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">local_parking</span> Parking Spots
+          </li>
+          <li
+            onclick="navigateTo('/admin/contact-messages')"
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <span class="material-icons">bar_chart</span> User Query
+          </li>
+          <li class="mb-3 flex flex-col">
+            <div
+              class="flex items-center justify-between gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+              onclick="toggleDropdown(event)"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-icons">extension</span> ADD-ON
+              </div>
+              <span
+                id="dropdownIcon"
+                class="material-icons transition-all duration-300"
+                >expand_more</span
+              >
+            </div>
+
+            <!-- Dropdown inside sidebar -->
+            <ul
+              id="addonDropdown"
+              class="hidden flex flex-col mt-1 bg-blue-800 rounded-lg"
+            >
+              <li
+                onclick="navigateTo('/addons/view-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>View ADD-ONs</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/new-addon')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>New ADD-ON</p>
+              </li>
+              <li
+                onclick="navigateTo('/addons/status')"
+                class="px-3 py-4 hover:bg-blue-700 cursor-pointer"
+              >
+                <p>Status ADD-ON</p>
+              </li>
+            </ul>
+          </li>
+
+          <li
+            class="mb-3 flex items-center gap-2 hover:bg-blue-700 p-2 rounded cursor-pointer"
+          >
+            <form action="/auth/logout" method="post">
+              <button class="flex items-center gap-2">
+                <span class="material-icons">logout</span> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10">
+      <div class="bg-white shadow-xl rounded-2xl p-8 max-w-3xl mx-auto">
+        <h2
+          class="text-2xl font-semibold text-blue-600 mb-6 flex items-center gap-2"
+        >
+          <span class="material-icons text-3xl">add_circle</span>
+          Add Addon
+        </h2>
+
+        <!-- Success Message -->
+        <div
+          th:if="${message}"
+          th:text="${message}"
+          class="text-red-500 text-center font-medium mb-4"
+        ></div>
+
+        <form
+          th:action="@{/addons/addAddon}"
+          th:object="${addon}"
+          method="post"
+          class="space-y-4"
+        >
+          <!-- Name -->
+          <div>
+            <input type="hidden" name="addOnId" th:field="*{addOnId}" />
+            <label for="name" class="block text-sm font-medium text-gray-700"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              th:field="*{name}"
+              required
+              class="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-blue-500 py-2 px-3 border focus:ring-blue-500"
+            />
+            <div
+              th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"
+              class="text-red-500 text-sm mt-1"
+            ></div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700"
+              >Description</label
+            >
+            <textarea
+              id="description"
+              th:field="*{description}"
+              rows="3"
+              required
+              class="mt-1 block border w-full py-2 px-3 rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            ></textarea>
+            <div
+              th:if="${#fields.hasErrors('description')}"
+              th:errors="*{description}"
+              class="text-red-500 text-sm mt-1"
+            ></div>
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700"
+              >Price</label
+            >
+            <input
+              type="number"
+              id="price"
+              step="0.01"
+              th:field="*{price}"
+              required
+              class="mt-1 block w-full border px-3 py-2 rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+            <div
+              th:if="${#fields.hasErrors('price')}"
+              th:errors="*{price}"
+              class="text-red-500 text-sm mt-1"
+            ></div>
+          </div>
+
+          <!-- Vehicle Type -->
+          <div>
+            <label
+              for="vehicleType"
+              class="block text-sm font-medium text-gray-700"
+              >Vehicle Type</label
+            >
+            <select
+              id="vehicleType"
+              th:field="*{vehicleType}"
+              required
+              class="mt-1 block w-full rounded-md border-gray-600 border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="">-- Select --</option>
+              <option
+                th:each="type : ${vehicleTypes}"
+                th:value="${type}"
+                th:text="${type}"
+              ></option>
+            </select>
+            <div
+              th:if="${#fields.hasErrors('vehicleType')}"
+              th:errors="*{vehicleType}"
+              class="text-red-500 text-sm mt-1"
+            ></div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-between items-center pt-4">
+            <button
+              type="submit"
+              class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              <span class="material-icons">send</span>
+              Submit
+            </button>
+            <a
+              th:href="@{/addons/}"
+              class="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition"
+            >
+              <span class="material-icons">arrow_back</span>
+              Back to Home
+            </a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // Toggle Profile Dropdown
+      document
+        .getElementById("profileMenuBtn")
+        .addEventListener("click", function () {
+          document.getElementById("profileMenu").classList.toggle("hidden");
+        });
+      function navigateTo(route) {
+        window.location.assign(route);
+      }
+      function toggleDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById("addonDropdown");
+        const icon = document.getElementById("dropdownIcon");
+
+        dropdown.classList.toggle("hidden");
+
+        // Toggle arrow direction
+        if (dropdown.classList.contains("hidden")) {
+          icon.textContent = "expand_more";
+        } else {
+          icon.textContent = "expand_less";
+        }
+      }
+
+      // Close dropdown when clicking anywhere else
+      document.addEventListener("click", function (event) {
+        let dropdown = document.getElementById("addonDropdown");
+        if (!dropdown.classList.contains("hidden")) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      document
+        .getElementById("addonDropdown")
+        .addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+    </script>
+  </body>
+</html>

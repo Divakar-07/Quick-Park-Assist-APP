@@ -1,0 +1,397 @@
+/* Full-page static background */
+body {
+    background: url('/images/death-valley-3133502_1280.jpg') no-repeat center center fixed;
+    background-size: 1580px 853px;
+    background-color: #f8f9fa;
+}
+
+.transparent-box {
+    background: rgba(255, 255, 255, 0.2); /* 80% transparency */
+    backdrop-filter: transparency;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* Custom font styling */
+.transparent-box h2 {
+    font-family: 'Anton', sans-serif;
+    font-weight: bold;
+    font-size: 70px;
+    letter-spacing: 3;
+    text-align: left;
+    line-height: 1.1;
+    color: black;
+}
+
+.transparent-box p {
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    font-size: 28px;
+    letter-spacing: 5;
+    text-align: left;
+    line-height: 1.4;
+
+}
+
+/* Image styling */
+.left-image {
+    width: 100%;
+    max-width: 250px;
+    border-radius: 10px;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .row {
+        text-align: center;
+    }
+    .left-image {
+        margin-bottom: 15px;
+    }
+    .testimonial-slide {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .testimonial-card {
+        max-width: 80%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Content container to overlay elements */
+.content-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Fullscreen hero section */
+.hero-section {
+    position: relative;
+    height: 105vh;
+    overflow: hidden;
+    
+}
+
+/* Ensure slider covers full viewport */
+.carousel-item {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+/* Black overlay */
+.carousel-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Black overlay */
+}
+
+/* Centered text content */
+.carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.carousel-caption h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Read More Button */
+.carousel-caption .btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Adjust arrows */
+.carousel-control-prev, .carousel-control-next {
+    filter: invert(100%); 
+}
+
+/* About Us Section */
+.about-section {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+}
+
+/* Tab Styling */
+.nav-tabs .nav-link {
+    color: #333;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Content Box */
+.tab-content {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-divider {
+    border: 0; /* Removed default border */
+    height: 1px;
+    background-color: #cccccc00;
+    margin: 40px 0; 
+}
+
+/* Image Styling */
+.about-image {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Section Styling */
+.how-it-works {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.step-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.step-box:hover {
+    transform: translateY(-5px);
+}
+
+.step-box i {
+    font-size: 40px;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.step-box h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.step-box p {
+    color: #555;
+}
+
+/* Login Button */
+.login-btn {
+    margin-top: 30px;
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Section Styling */
+.services-section {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.container p {
+    font-size: 18px;
+}
+
+.service-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    
+}
+
+.service-box:hover {
+    transform: translateY(-5px);
+}
+
+.service-box i {
+    font-size: 40px;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.service-box h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.service-box p {
+    color: #555;
+    font-size: 18px;
+}
+
+/* Read More Button */
+.read-more-btn {
+    margin-top: 15px;
+    padding: 8px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Testimonial Section Styles */
+.testimonial-section {
+    width: 100%;
+    overflow: hidden;
+    background: #f8f9fa;
+    padding: 40px 0;
+}
+
+.testimonial-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    overflow: hidden;
+}
+.UT {
+    text-align: center;
+}
+
+/* Row Settings */
+.testimonial-row {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping */
+    gap: 20px;
+    min-width: 150%; /* Ensures scrolling effect */
+    animation: scrollLeft 15s linear infinite;
+}
+
+/* Reverse Row */
+.reverse {
+    animation: scrollRight 15s linear infinite;
+}
+
+/* Card Settings */
+.testimonial-card {
+    min-width: 280px; /* Fixed size */
+    height: 200px;
+    background: rgb(30, 30, 30);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.testimonial-card:hover {
+    transform: scale(1.10);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.imgBx img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.contentBx h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: bold;
+    font-family: cursive;
+
+}
+
+.designation {
+    font-size: 0.9rem;
+    color: rgb(24, 248, 32);
+    margin-bottom: 10px;
+    font-family: "Roboto";
+}
+
+.review {
+    font-size: 1rem;
+    color: #fdfcfc;
+}
+
+.testimonial-indicators {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Smooth Infinite Scroll */
+@keyframes scrollLeft {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+}
+
+/* Custom CSS for White Icons  */
+.social-icon {
+    transition: all 0.3s ease;
+    padding: 8px;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+    opacity: 0.8;
+}
+
+/* For X (Twitter) icon color */
+.fa-x-twitter, .bi-twitter-x {
+    color: white; 
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  .fa-x-twitter:hover, .bi-twitter-x:hover {
+    color: #000 !important; /* X logo's black color */
+    transform: scale(1.1);
+  }
+
+/* Facebook icon color */
+.fa-facebook:hover {
+    color: #1877f2 !important;
+}
+
+/* Instagram icon color */
+.fa-instagram:hover {
+    color: #e4405f !important;
+}
+
+.success-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}
+.error-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}
+.notify-toast {
+    border-radius: 8px;
+    font-weight: bold;
+}

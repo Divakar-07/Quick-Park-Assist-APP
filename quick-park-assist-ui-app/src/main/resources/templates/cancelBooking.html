@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow-md mt-10">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">Cancel Booking</h2>
+
+        <!-- Error Message Display -->
+        <!-- Error Message Display -->
+<div th:if="${error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded border border-red-500">
+    <strong>Error:</strong> <span th:text="${error}"></span>
+</div>
+
+<!-- Success Message Display -->
+<div th:if="${message}" class="mb-4 p-3 bg-green-100 text-green-800 rounded border border-green-500">
+    <strong>Success:</strong> <span th:text="${message}"></span>
+</div>
+
+
+        <!-- Fetch Booking Details Form -->
+        <form th:action="@{/ui/booking/fetchBooking}" method="get" class="space-y-4">
+            <!-- Booking ID -->
+            <div>
+                <label class="block text-sm font-medium">Booking ID</label>
+                <input type="number" name="bookingId" required
+                       class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                Fetch Booking Details
+            </button>
+        </form>
+
+        <!-- Booking Details Section -->
+        <div th:if="${booking}" class="mt-6">
+            <h3 class="text-lg font-semibold mb-2">Booking Details</h3>
+            <div class="border p-4 rounded">
+                <p><strong>Booking ID:</strong> <span th:text="${booking.bookingId}"></span></p>
+                <p><strong>Slot ID:</strong> <span th:text="${booking.spotInfo.spotId}"></span></p>
+                <p><strong>Start Time:</strong> <span th:text="${booking.startTime}"></span></p>
+                <p><strong>End Time:</strong> <span th:text="${booking.endTime}"></span></p>
+                <!-- <p><strong>Status:</strong> <span th:text="${booking.status}"></span></p> -->
+            </div>
+
+            <!-- Cancel Booking Form -->
+            <form th:action="@{/ui/booking/cancelByBookingId}" method="post" class="mt-4">
+                <input type="hidden" name="bookingId" th:value="${booking.bookingId}">
+                <button type="submit" 
+                        class="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                    Cancel Booking
+                </button>
+            </form>
+        </div>
+
+        <!-- Return to Home Button -->
+        <a th:href="@{/ui/booking/home}" 
+           class="block mt-4 text-center text-blue-500 hover:underline">
+            Return to Home
+        </a>
+    </div>
+</body>
+</html>
