@@ -2,20 +2,7 @@ package com.qpa.entity;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -24,104 +11,90 @@ public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vehicleId;
-
-    @NotBlank(message = "Registration number is required")
-    @Pattern(regexp = "^[A-Z]{2}\\d{2}[A-Z0-9]{6}$", message = "Invalid registration number format (e.g., UP16DS4141)")
-    @Column(nullable = false, unique = true)
+    
     private String registrationNumber;
-
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(nullable = false)
-    private VehicleType vehicleType;
-
-    @NotBlank
-    @Column(nullable = false)
+    private String vehicleType;
     private String brand;
-
-    @NotBlank
-    @Column(nullable = false)
     private String model;
-
-    @NotNull
-    @Column(nullable = false)
-    @PastOrPresent(message = "date must be past or present")
-    private LocalDate registrationDate; // Now stored as String
-
-    @Column(nullable = false)
-    private boolean isActive = true;
-
+    private LocalDate registrationDate;
+    private boolean isActive;
+    
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @NotNull
+    @JoinColumn(name = "user_id")
     private UserInfo userObj;
 
-    // Default constructor
-    public Vehicle() {
-    }
-
     // Getters and Setters
-    public Long getVehicleId() {
-        return vehicleId;
-    }
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
+	public Long getVehicleId() {
+		return vehicleId;
+	}
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
+	public void setVehicleId(Long vehicleId) {
+		this.vehicleId = vehicleId;
+	}
 
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
+	public String getRegistrationNumber() {
+		return registrationNumber;
+	}
 
-    public VehicleType getVehicleType() {
-        return vehicleType;
-    }
+	public void setRegistrationNumber(String registrationNumber) {
+		this.registrationNumber = registrationNumber;
+	}
 
-    public void setVehicleType(VehicleType vehicleType) {
-        this.vehicleType = vehicleType;
-    }
+	public String getVehicleType() {
+		return vehicleType;
+	}
 
-    public String getBrand() {
-        return brand;
-    }
+	public void setVehicleType(String vehicleType) {
+		this.vehicleType = vehicleType;
+	}
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+	public String getBrand() {
+		return brand;
+	}
 
-    public String getModel() {
-        return model;
-    }
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+	public String getModel() {
+		return model;
+	}
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
+	public void setModel(String model) {
+		this.model = model;
+	}
 
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
+	public LocalDate getRegistrationDate() {
+		return registrationDate;
+	}
 
-    public boolean isActive() {
-        return isActive;
-    }
+	public void setRegistrationDate(LocalDate registrationDate) {
+		this.registrationDate = registrationDate;
+	}
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
+	public boolean isActive() {
+		return isActive;
+	}
 
-    public UserInfo getUserObj() {
-        return userObj;
-    }
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 
-    public void setUserObj(UserInfo userObj) {
-        this.userObj = userObj;
-    }
+	public UserInfo getUserObj() {
+		return userObj;
+	}
+
+	public void setUserObj(UserInfo userObj) {
+		this.userObj = userObj;
+	}
+
+
 }
+	/*
+	 vehicleId
+	 registrationNumber
+	 vehicleType
+	 User userObj
+	 */
+	

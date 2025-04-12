@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Park Assist</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Navcontainer -->
+    <div class="content-container">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light bg-opacity-75">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="/index.html">
+                    <img th:src="@{/images/download (5).png}" alt="Quick Park" width="150">
+                </a>
+    
+                <!-- Navbar Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/userdashboard.html">Home</a>
+                        </li>
+                        <!-- Dropdown Menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#Service" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                                Our Service
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Smartsport.html">Smart Spots</a></li>
+                                <li><a class="dropdown-item" href="#">Booking</a></li>
+                                <li><a class="dropdown-item" href="#">Addon</a></li>
+                                <li><a class="dropdown-item" href="#">EV Recharge</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contact">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+    
+                <!-- Get Started Button -->
+                <a href="#" class="btn btn-primary d-none d-md-inline-block"><i class="fas fa-user"></i></a>
+            </div>
+        </nav>
+       <!-- Navcontainer -->
+
+
+    <!-- User Form -->
+        <div class="form-card">
+            <h2 th:text="${user.userId != null} ? 'Edit User' : 'New User'"></h2>
+            <form th:action="@{/users/save}" th:object="${user}" method="post">
+                <input type="hidden" th:field="*{userId}">
+
+                <!-- Date of Registration -->
+                <div class="form-group">
+                    <label>Date of Registration</label>
+                    <input type="date" th:field="*{dateOfRegister}" required min="1900-01-01" max="2025-12-31">
+                </div>
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" th:field="*{firstName}" required placeholder="e.g Divakar">
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" th:field="*{lastName}" required placeholder="e.g Sharma">
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" th:field="*{dob}" required min="1900-01-01" max="2025-12-31">
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" th:field="*{email}" class="form-control" required placeholder="e.g: divakar.sharma@example.com">
+                    <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+
+                <!-- Contact Number -->
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="tel" th:field="*{contactNumber}" class="form-control" required pattern="\+91[6-9][0-9]{9}" placeholder="e.g: +919876543210">
+                    <div class="error" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></div>
+                </div>
+
+                <!-- User Type -->
+                <div class="form-group">
+                    <label>User Type</label>
+                    <select th:field="*{userType}">
+                        <option value="VEHICLE_OWNER">Vehicle Owner</option>
+                        <option value="SLOT_OWNER">Slot Owner</option>
+                    </select>
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea th:field="*{address}" class="form-control" rows="3" required placeholder="Street, City, State, ZIP"></textarea>
+                </div>
+
+                <!-- Status -->
+                <div class="form-group">
+                    <label>Status</label>
+                    <select th:field="*{status}">
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span th:text="${user.userId != null} ? 'Update' : 'Create'"></span>
+                    </button>
+                    <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    
+</body>
+</html>
